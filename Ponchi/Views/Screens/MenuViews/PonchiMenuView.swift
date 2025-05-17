@@ -28,11 +28,11 @@ struct PonchiMenuView: View {
                 
                
                 PonchiMenuScrollView(selectedCategory: $ponchiViewModel.selectedCategory, selectedIndex: $ponchiViewModel.selectedIndex)
-                    .sheet(isPresented: $ponchiViewModel.isShowingDetails) {
-                        PonchiDrinkDetailView()
-                            .environmentObject(ponchiViewModel)
-                            .presentationDetents([.large])
-                    }
+//                    .sheet(isPresented: $ponchiViewModel.isShowingDetails) {
+//                        PonchiDrinkDetailView()
+//                            .environmentObject(ponchiViewModel)
+//                            .presentationDetents([.large])
+//                    }
             }
             .blur(radius: ponchiViewModel.isShowingDetails ? 20 : 0)
            
@@ -40,6 +40,12 @@ struct PonchiMenuView: View {
 //                PonchiDrinkDetailView()
 //                    .environmentObject(ponchiViewModel)
 //            }
+        }
+      
+        .overlay {
+            if ponchiViewModel.isShowingDetails {
+                PonchiDrinkDetailView()
+            }
         }
         .onTapGesture {
             withAnimation {

@@ -31,6 +31,8 @@
 		D28A64482D021208000FD2C8 /* PonCustomSegmentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28A64472D021208000FD2C8 /* PonCustomSegmentPicker.swift */; };
 		D2955CA62CFF786900609FAE /* PonchiHeaderMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2955CA52CFF786900609FAE /* PonchiHeaderMenu.swift */; };
 		D2955CA92CFF881400609FAE /* ColorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2955CA82CFF881400609FAE /* ColorEx.swift */; };
+		D2BEA2DB2DCFD2870084B8B4 /* ButtonSheetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEA2DA2DCFD2870084B8B4 /* ButtonSheetDetailView.swift */; };
+		D2BEA2DE2DCFD2E20084B8B4 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D2BEA2DD2DCFD2E20084B8B4 /* BottomSheet */; };
 		D2BEF31C2D3D725C0033CBFE /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31B2D3D725C0033CBFE /* Cart.swift */; };
 		D2BEF31E2D3D80960033CBFE /* EmptyOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31D2D3D80960033CBFE /* EmptyOrderView.swift */; };
 		D2BEF3202D42B22B0033CBFE /* PonchiListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31F2D42B22B0033CBFE /* PonchiListCell.swift */; };
@@ -67,6 +69,7 @@
 		D28A64472D021208000FD2C8 /* PonCustomSegmentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonCustomSegmentPicker.swift; sourceTree = "<group>"; };
 		D2955CA52CFF786900609FAE /* PonchiHeaderMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiHeaderMenu.swift; sourceTree = "<group>"; };
 		D2955CA82CFF881400609FAE /* ColorEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorEx.swift; sourceTree = "<group>"; };
+		D2BEA2DA2DCFD2870084B8B4 /* ButtonSheetDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSheetDetailView.swift; sourceTree = "<group>"; };
 		D2BEF31B2D3D725C0033CBFE /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
 		D2BEF31D2D3D80960033CBFE /* EmptyOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyOrderView.swift; sourceTree = "<group>"; };
 		D2BEF31F2D42B22B0033CBFE /* PonchiListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiListCell.swift; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2BEA2DE2DCFD2E20084B8B4 /* BottomSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +246,7 @@
 				D28A63BF2D00C719000FD2C8 /* PonchiDrinkDetailView.swift */,
 				D280AF6C2D834F95000BD5FB /* RotatingDigitView.swift */,
 				D25DE9DA2D17358600D5976F /* PonchiToppingsView.swift */,
+				D2BEA2DA2DCFD2870084B8B4 /* ButtonSheetDetailView.swift */,
 			);
 			path = DetailViews;
 			sourceTree = "<group>";
@@ -298,6 +303,9 @@
 				Base,
 			);
 			mainGroup = D24856102C876C6000F7727E;
+			packageReferences = (
+				D2BEA2DC2DCFD2E20084B8B4 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+			);
 			productRefGroup = D248561A2C876C6000F7727E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -331,6 +339,7 @@
 				D280DA562CF3AA5100B2C464 /* User.swift in Sources */,
 				D280AF712D835031000BD5FB /* CloseButton.swift in Sources */,
 				D274DB3B2CF4FF5300E743D5 /* PonClassicSectionView.swift in Sources */,
+				D2BEA2DB2DCFD2870084B8B4 /* ButtonSheetDetailView.swift in Sources */,
 				D280AF022D7E0A1A000BD5FB /* PonchiRegView.swift in Sources */,
 				D24B775C2CFA2B840091EB64 /* CustomTabButton.swift in Sources */,
 				D280DA0B2CF242B700B2C464 /* PonchiMenuView.swift in Sources */,
@@ -560,6 +569,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D2BEA2DC2DCFD2E20084B8B4 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Wouter125/BottomSheet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D2BEA2DD2DCFD2E20084B8B4 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D2BEA2DC2DCFD2E20084B8B4 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D24856112C876C6000F7727E /* Project object */;
 }
