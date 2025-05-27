@@ -7,43 +7,37 @@
 
 import SwiftUI
 
-
 struct PonchiMenuView: View {
-    
     @EnvironmentObject var ponchiViewModel: PonchiViewModel
-    
+
     var body: some View {
         ZStack {
             VStack {
-               
                 PonchiHeaderMenu()
                     .padding()
-                
+
                 PonCustomSegmentPicker(
                     categories: ponchiViewModel.newCategories,
                     selectedCategory: $ponchiViewModel.selectedCategory,
                     selectedIndex: $ponchiViewModel.selectedIndex
                 )
                 .padding(.vertical)
-                
-               
-                PonchiMenuScrollView(selectedCategory: $ponchiViewModel.selectedCategory, selectedIndex: $ponchiViewModel.selectedIndex)
-//                    .sheet(isPresented: $ponchiViewModel.isShowingDetails) {
-//                        PonchiDrinkDetailView()
-//                            .environmentObject(ponchiViewModel)
-//                            .presentationDetents([.large])
-//                    }
+
+                PonchiMenuScrollView(
+                    selectedCategory: $ponchiViewModel.selectedCategory,
+                    selectedIndex: $ponchiViewModel.selectedIndex
+                )
             }
             .blur(radius: ponchiViewModel.isShowingDetails ? 20 : 0)
-           
-//            if ponchiViewModel.isShowingDetails {
-//                PonchiDrinkDetailView()
-//                    .environmentObject(ponchiViewModel)
-//            }
-        }
-      
-        .overlay {
+
             if ponchiViewModel.isShowingDetails {
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            ponchiViewModel.isShowingDetails = false
+                        }
+                    }
                 PonchiDrinkDetailView()
             }
         }
@@ -52,16 +46,11 @@ struct PonchiMenuView: View {
                 ponchiViewModel.isShownCups = false
             }
         }
-        .animation(.easeInOut, value: ponchiViewModel.isShowingDetails)
-        .sheet(isPresented: $ponchiViewModel.isSelected) {
-            withAnimation {
-                PonchiRegView()
-                    .presentationDetents([.large, .fraction(0.8)])
-                    .presentationCornerRadius(20)
-            }
-        }
     }
 }
+
+
+
 
 #Preview {
     PonchiCustomTabBar()

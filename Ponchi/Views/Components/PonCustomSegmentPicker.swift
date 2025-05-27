@@ -13,6 +13,7 @@ struct SegmentItemView: View {
     let isSelected: Bool
     let animationNamespace: Namespace.ID
     let onTap: () -> Void
+    let color = Color(hex: "#F4C7C3")
 
     var body: some View {
         Text(title)
@@ -22,12 +23,12 @@ struct SegmentItemView: View {
                 ZStack {
                     if isSelected {
                         RoundedRectangle(cornerRadius: 25)
-                            .fill(Color("brandColor").opacity(0.8))
+                            .fill(color)
                             .matchedGeometryEffect(id: "segment", in: animationNamespace)
                     }
                 }
             )
-            .foregroundColor(isSelected ? .white : Color("brandColor"))
+            .foregroundColor(isSelected ? .white : Color(hex: "#F99CA0"))
             .onTapGesture {
                 onTap()
             }
@@ -42,6 +43,7 @@ struct PonCustomSegmentPicker: View {
     let categories: [Category]
     @Binding var selectedCategory: Category?
     @Binding var selectedIndex: Int
+    let color = Color(hex: "#F4C7C3")
     
 
     var body: some View {
@@ -81,6 +83,7 @@ struct CustomSegmentPicker: View {
     @Namespace private var animationNamespace
     
     let categories: [Size]
+    let color = Color(hex: "#F4C7C3")
     
     var body: some View {
        
@@ -98,7 +101,7 @@ struct CustomSegmentPicker: View {
                 .id(size)
             }
         }
-        .background(Color("brandColor").opacity(0.3))
+        .background(color)
         .cornerRadius(20)
     }
 }

@@ -15,8 +15,8 @@ struct PonchiMenuScrollView: View {
     
     let categories = Category.allCases
     var columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.fixed(180)),
+        GridItem(.fixed(180))
     ]
     
     private func isCategoryVisible(_ geometry: GeometryProxy) -> Bool {
@@ -39,6 +39,7 @@ struct PonchiMenuScrollView: View {
                         ) {
                             ForEach(ponchiViewModel.getProducts(for: category.rawValue)) { product in
                                 PonClassicSectionView(product: product)
+                                    .frame(width: 180, height: 280)
                                     .onTapGesture {
                                         withAnimation {
                                             ponchiViewModel.isShowingDetails.toggle()
@@ -69,7 +70,7 @@ struct PonchiMenuScrollView: View {
                 .padding(.horizontal)
             }
             .padding(.vertical)
-            .background(Color(hex: "#4e6d54"))
+            .background(Color(hex: "#4e6d54").opacity(0.8))
             .cornerRadius(20)
             .ignoresSafeArea()
             .onPreferenceChange(SectionPositionPreferenceKey.self) { newCategory in
