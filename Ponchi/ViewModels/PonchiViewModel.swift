@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BottomSheet
+
 
 class PonchiViewModel: ObservableObject {
     @Published var ponchis: [Ponchi] = MockPonchiData.all
@@ -56,7 +56,6 @@ class PonchiViewModel: ObservableObject {
     @Published var selectedToppings: [ToppingOption] = []
     
     @Published var isPresented = true
-    @Published var selectedDetent: BottomSheet.PresentationDetent = .medium
     
     func selectSize(_ size: Size) {
         guard var currentPonchi = selectedPonchi else { return }

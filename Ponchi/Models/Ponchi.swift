@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SwiftUI
 
 struct Ponchi: Identifiable, Codable, Equatable {
     var id: String { generateID() }
@@ -37,10 +37,12 @@ struct Ponchi: Identifiable, Codable, Equatable {
     
     var availableToppings: [Topping]?
     
+    var drinkTag: [DrinkTag]?
+    var foodTag: [FoodTag]?
+    
     var selectedToppings: [ToppingOption] {
         availableToppings?.flatMap { $0.options.filter { $0.isSelected } } ?? []
     }
-    
 
     // Цена выбранного размера
     var currentSizePrice: Int {
@@ -103,8 +105,6 @@ struct Ponchi: Identifiable, Codable, Equatable {
         return updated
     }
 }
-
-
 
 struct SizePicker: Codable, Identifiable, Equatable {
     var id = UUID()
@@ -190,20 +190,158 @@ struct ToppingStore {
     ]
 }
 
+enum DrinkTag: String, CaseIterable, Identifiable, Codable {
+    case молочнаяПенка = "Молочная пенка"
+    case сбалансированный = "Сбалансированный"
+    case классика = "Классика"
+    case освежающий = "Освежающий"
+    case сладкий = "Сладкий"
+    case холодный = "Холодный"
+    case тёплый = "Тёплый"
+    case фруктовый = "Фруктовый"
+    case насыщенный = "Насыщенный"
+    case лёгкий = "Лёгкий"
+    case ореховый = "Ореховый"
+    case сливочный = "Сливочный"
+    case ванильный = "Ванильный"
+    case травяной = "Травяной"
+    case цитрусовый = "Цитрусовый"
+    case шоколадный = "Шоколадный"
+    case бодрящий = "Бодрящий"
+    case пряный = "Пряный"
+    case кремовый = "Кремовый"
+    case густой = "Густой"
+    case бархатный = "Бархатный"
+    case матча = "Матча"
+    case необычно = "Необычно"
+
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .молочнаяПенка: return "cloud.fill"
+        case .сбалансированный: return "scalemass"
+        case .классика: return "cup.and.saucer.fill"
+        case .освежающий: return "sparkle"
+        case .сладкий: return "cube.fill"
+        case .холодный: return "snowflake"
+        case .тёплый: return "thermometer"
+        case .фруктовый: return "applelogo"
+        case .насыщенный: return "drop.triangle"
+        case .лёгкий: return "wind"
+        case .ореховый: return "leaf"
+        case .сливочный: return "sun.max"
+        case .ванильный: return "sparkles"
+        case .травяной: return "leaf.fill"
+        case .цитрусовый: return "sun.dust"
+        case .шоколадный: return "flame"
+        case .бодрящий: return "bolt.fill"
+        case .пряный: return "tropicalstorm"
+        case .кремовый: return "circle.lefthalf.fill"
+        case .густой: return "drop.fill"
+        case .бархатный: return "moon.fill"
+        case .матча: return "leaf.circle.fill"
+        case .необычно: return "wand.and.stars"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .молочнаяПенка: return Color(hex: "#EFE8DC")
+        case .сбалансированный: return Color(hex: "#D8D2C4")
+        case .классика: return Color(hex: "#C2B3A3")
+        case .освежающий: return Color(hex: "#C8E4D4")
+        case .сладкий: return Color(hex: "#F4D4D4")
+        case .холодный: return Color(hex: "#D8E9F1")
+        case .тёплый: return Color(hex: "#E7D6C5")
+        case .фруктовый: return Color(hex: "#F9D8B4")
+        case .насыщенный: return Color(hex: "#B29C8A")
+        case .лёгкий: return Color(hex: "#E4E6D9")
+        case .ореховый: return Color(hex: "#D1BFA3")
+        case .сливочный: return Color(hex: "#F1DEC9")
+        case .ванильный: return Color(hex: "#F8EFD4")
+        case .травяной: return Color(hex: "#D2E0C4")
+        case .цитрусовый: return Color(hex: "#FFE9BB")
+        case .шоколадный: return Color(hex: "#A98C73")
+        case .бодрящий: return Color(hex: "#EBD6A8")
+        case .пряный: return Color(hex: "#D5B8A1")
+        case .кремовый: return Color(hex: "#F4E9DD")
+        case .густой: return Color(hex: "#D0C4B1")
+        case .бархатный: return Color(hex: "#C8B8A9")
+        case .матча: return Color(hex: "#B7D7B1")
+        case .необычно: return Color(hex: "#D4CCE3")
+
+        }
+    }
+}
+
+enum FoodTag: String, CaseIterable, Identifiable, Codable {
+    case сытная = "Сытная"
+    case сладкая = "Сладкая"
+    case хрустящая = "Хрустящая"
+    case горячая = "Горячая"
+    case тёплая = "Тёплая"
+    case прохладная = "Прохладная"
+    case классика = "Классика"
+    case вегетарианская = "Вегетарианская"
+    case кремовая = "Кремовая"
+    case сырная = "Сырная"
+    case хендмейд = "Хендмейд"
+    case наЗавтрак = "На завтрак"
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .сытная: return "takeoutbag.and.cup.and.straw"
+        case .сладкая: return "birthday.cake.fill"
+        case .хрустящая: return "frying.pan"
+        case .горячая: return "flame.fill"
+        case .тёплая: return "thermometer.medium"
+        case .прохладная: return "snowflake"
+        case .классика: return "leaf"
+        case .вегетарианская: return "leaf.fill"
+        case .кремовая: return "drop"
+        case .сырная: return "cheese"
+        case .хендмейд: return "hammer.fill"
+        case .наЗавтрак: return "sunrise.fill"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .сытная: return Color(hex: "#E4CBB0")
+        case .сладкая: return Color(hex: "#F7D6DA")
+        case .хрустящая: return Color(hex: "#E8D3B2")
+        case .горячая: return Color(hex: "#F6B291")
+        case .тёплая: return Color(hex: "#F0DDC1")
+        case .прохладная: return Color(hex: "#D8EDF2")
+        case .классика: return Color(hex: "#DAD2BE")
+        case .вегетарианская: return Color(hex: "#C9E1BE")
+        case .кремовая: return Color(hex: "#F3E6D6")
+        case .сырная: return Color(hex: "#FFF3B0")
+        case .хендмейд: return Color(hex: "#D5C4B6")
+        case .наЗавтрак: return Color(hex: "#FFE8B7")
+        }
+    }
+}
+
 struct MockPonchiData {
     static let cappuccino = Ponchi(
         name: "Капучино",
         category: .coffee,
         basePrice: 149,
         image: "capuccino",
-        description: "Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.",
+        description: "Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.",
         calories: "130 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 149),
             SizePicker(volume: .medium, price: 179),
             SizePicker(volume: .large, price: 229)
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.сбалансированный, .классика, .молочнаяПенка]
     )
     
     static let americano = Ponchi(
@@ -217,7 +355,8 @@ struct MockPonchiData {
             SizePicker(volume: .small, price: 125),
             SizePicker(volume: .medium, price: 159)
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.классика, .тёплый]
     )
     
     static let espresso = Ponchi(
@@ -231,7 +370,8 @@ struct MockPonchiData {
             SizePicker(volume: .small, price: 99),
             SizePicker(volume: .medium, price: 125)
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.классика, .бодрящий]
     )
     
     static let latte = Ponchi(
@@ -245,7 +385,8 @@ struct MockPonchiData {
             SizePicker(volume: .medium, price: 179),
             SizePicker(volume: .large, price: 229)
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.классика, .тёплый, .лёгкий]
     )
     
     static let raf = Ponchi(
@@ -258,7 +399,8 @@ struct MockPonchiData {
         fixedSizes: [
             SizePicker(volume: .medium, price: 259) // Только один размер
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.бархатный, .ванильный, .кремовый]
     )
     
     static let flat = Ponchi(
@@ -271,7 +413,8 @@ struct MockPonchiData {
         fixedSizes: [
             SizePicker(volume: .small, price: 169) // Только один размер
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.бодрящий, .молочнаяПенка, .насыщенный]
     )
     
     static let filter = Ponchi(
@@ -285,7 +428,8 @@ struct MockPonchiData {
             SizePicker(volume: .small, price: 149),
             SizePicker(volume: .medium, price: 199)
         ],
-        availableToppings: ToppingStore.availableToppings
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.классика, .тёплый, .бодрящий]
     )
     
     static let bananaRaf = Ponchi(
@@ -297,7 +441,9 @@ struct MockPonchiData {
         calories: "270 ккал",
         fixedSizes: [
             SizePicker(volume: .medium, price: 250)
-        ])
+        ],
+        drinkTag: [.бархатный, .пряный, .сливочный]
+    )
     
     static let pampkinRaf = Ponchi(
         name: "Тыквенный раф",
@@ -308,7 +454,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .medium, price: 359)
-        ])
+        ],
+        drinkTag: [.пряный, .сливочный]
+    )
     
     static let cheezeSanta = Ponchi(
         name: "Сырный Санта",
@@ -317,10 +465,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 349)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 349)],
+        drinkTag: [.бархатный, .кремовый])
+
     static let canadaRaf = Ponchi(
         name: "Канадский раф",
         category: .new,
@@ -328,10 +475,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 349)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 349)],
+        drinkTag: [.тёплый, .сливочный])
+
     static let spicyPear = Ponchi(
         name: "Пряная груша",
         category: .new,
@@ -339,10 +485,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 359)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 359)],
+        drinkTag: [.фруктовый, .пряный])
+
     static let nutsMokka = Ponchi(
         name: "Ореховый мокко",
         category: .signatureDrincks,
@@ -350,10 +495,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 359)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 359)],
+        drinkTag: [.шоколадный, .ореховый])
+
     static let pinkMatcha = Ponchi(
         name: "Розовая матча",
         category: .signatureDrincks,
@@ -361,10 +505,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 339)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 339)],
+        drinkTag: [.матча, .травяной, .лёгкий, .необычно])
+
     static let coconutMatcha = Ponchi(
         name: "Кокосовая матча",
         category: .signatureDrincks,
@@ -372,10 +515,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 339)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 339)],
+        drinkTag: [.матча, .ореховый, .сладкий])
+
     static let iceLatte = Ponchi(
         name: "Айс-латте",
         category: .signatureDrincks,
@@ -383,10 +525,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 239)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 239)],
+        drinkTag: [.лёгкий, .освежающий, .холодный])
+
     static let cacao = Ponchi(
         name: "Какао",
         category: .notCoffee,
@@ -394,10 +535,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 159)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 159)],
+        drinkTag: [.ореховый, .тёплый, .сладкий])
+
     static let matchaLatte = Ponchi(
         name: "Матча латте",
         category: .notCoffee,
@@ -405,10 +545,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 229)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 229)],
+        drinkTag: [.матча, .молочнаяПенка])
+
     static let lemonade = Ponchi(
         name: "Лимонад",
         category: .notCoffee,
@@ -416,10 +555,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 239)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 239)],
+        drinkTag: [.фруктовый, .освежающий, .холодный])
+
     static let milkShake = Ponchi(
         name: "Молочный коктейль",
         category: .notCoffee,
@@ -427,10 +565,9 @@ struct MockPonchiData {
         image: "",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 159)
-        ])
-    
+        fixedSizes: [SizePicker(volume: .medium, price: 159)],
+        drinkTag: [.сладкий, .холодный, .ванильный])
+
     static let earlGray = Ponchi(
         name: "Эрл Грей",
         category: .notCoffee,
@@ -440,9 +577,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
-    
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.лёгкий, .травяной, .тёплый])
+
     static let raspberriesWithRosemary = Ponchi(
         name: "Малина с розмарином",
         category: .notCoffee,
@@ -452,9 +589,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
-    
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.травяной, .сладкий, .освежающий])
+
     static let irishCream = Ponchi(
         name: "Ирландские сливки",
         category: .notCoffee,
@@ -464,9 +601,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
-    
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.ореховый, .тёплый, .сладкий])
+
     static let spicyTea = Ponchi(
         name: "Пряный чай",
         category: .notCoffee,
@@ -476,9 +613,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
-    
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.пряный, .тёплый])
+
     static let cherryTea = Ponchi(
         name: "Вишневый чай",
         category: .notCoffee,
@@ -488,9 +625,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
-    
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.тёплый, .фруктовый])
+
     static let sencha = Ponchi(
         name: "Зеленый чай вечерний",
         category: .notCoffee,
@@ -500,8 +637,9 @@ struct MockPonchiData {
         calories: "280 ккал",
         fixedSizes: [
             SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)
-        ])
+            SizePicker(volume: .medium, price: 199)],
+        drinkTag: [.травяной, .лёгкий])
+
     
     static let sendwichWithHam = Ponchi(
         name: "Сэндвич с ветчиной",

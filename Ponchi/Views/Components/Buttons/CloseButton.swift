@@ -9,17 +9,19 @@ import SwiftUI
 
 struct CloseButton: View {
     let action: () -> Void
+    var color: Color
 
     var body: some View {
         Button(action: action) {
             ZStack {
                 Circle()
-                    .stroke(Color("brandColor"), lineWidth: 1)
+                    .stroke(color, lineWidth: 1)
                     .frame(width: 40, height: 40)
                 
                 Image(systemName: "xmark")
-                    .foregroundStyle(Color("brandColor"))
+                    .foregroundStyle(color)
             }
+
             .padding(3)
         }
     }

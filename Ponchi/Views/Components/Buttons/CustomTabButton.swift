@@ -22,7 +22,7 @@ struct CustomTabButton: View {
                 .scaledToFit()
                 .bold()
                 .frame(width: 32, height: 32)
-                .foregroundStyle(isSelected ? color : .secondary)
+                .foregroundStyle(color)
                 .shadow(color: Color("brandColor"), radius: isSelected ? 10 : 0)
         }
     }
@@ -46,7 +46,7 @@ struct CustomCartButton: View {
                     .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: 32, height: 32)
-                    .foregroundStyle(isSelected ? color : .secondary)
+                    .foregroundStyle(color)
                     .shadow(color: Color("brandColor"), radius: isSelected ? 10 : 0)
                 
                 if let badgeCount, badgeCount > 0 {
