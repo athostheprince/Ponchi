@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -78,6 +78,10 @@
 		D2BEF3252D4FF0A90033CBFE /* OrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewModel.swift; sourceTree = "<group>"; };
 		D2E6B3832DA6EAEA000BC65A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D287BD302DD8F7FB00B22E9E /* Shapes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Shapes; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D24856162C876C6000F7727E /* Frameworks */ = {
@@ -173,6 +177,7 @@
 		D274DB3C2CF782E000E743D5 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D287BD302DD8F7FB00B22E9E /* Shapes */,
 				D280AF6A2D834A2A000BD5FB /* Buttons */,
 				D2955CA72CFF87F400609FAE /* Extentions */,
 				D28A64472D021208000FD2C8 /* PonCustomSegmentPicker.swift */,
@@ -273,6 +278,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D287BD302DD8F7FB00B22E9E /* Shapes */,
 			);
 			name = Ponchi;
 			productName = Ponchi;
