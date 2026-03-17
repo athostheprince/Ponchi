@@ -1,0 +1,1823 @@
+[
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 149,
+    "calories" : "130 ккал",
+    "category" : "Классика",
+    "description" : "Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.",
+    "drinkTag" : [
+      "Сбалансированный",
+      "Классика",
+      "Молочная пенка"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 149,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 179,
+        "volume" : "M"
+      },
+      {
+        "id" : "L",
+        "price" : 229,
+        "volume" : "L"
+      }
+    ],
+    "image" : "Капуч",
+    "name" : "Капучино",
+    "nutrition" : {
+      "carbs" : "12 г",
+      "fats" : "5 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "cappuccino"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 125,
+    "calories" : "10 ккал",
+    "category" : "Классика",
+    "description" : "Американо — это классический черный кофе, приготовленный путем добавления горячей воды к порции эспрессо.",
+    "drinkTag" : [
+      "Классика",
+      "Тёплый"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 125,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 159,
+        "volume" : "M"
+      }
+    ],
+    "image" : "Американо",
+    "name" : "Американо",
+    "nutrition" : {
+      "carbs" : "1 г",
+      "fats" : "0 г",
+      "proteins" : "0 г"
+    },
+    "productId" : "americano"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 99,
+    "calories" : "10 ккал",
+    "category" : "Классика",
+    "description" : "Эспрессо — крепкий и насыщенный напиток, который подается в небольшом объеме.",
+    "drinkTag" : [
+      "Классика",
+      "Бодрящий"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 99,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 125,
+        "volume" : "M"
+      }
+    ],
+    "image" : "эспрессо",
+    "name" : "Эспрессо",
+    "nutrition" : {
+      "carbs" : "1 г",
+      "fats" : "0 г",
+      "proteins" : "1 г"
+    },
+    "productId" : "espresso"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 179,
+    "calories" : "170 ккал",
+    "category" : "Классика",
+    "description" : "Латте — классический молочный напиток с эспрессо, который отличается мягким вкусом и легкой сливочной текстурой.",
+    "drinkTag" : [
+      "Классика",
+      "Тёплый",
+      "Лёгкий"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 179,
+        "volume" : "M"
+      },
+      {
+        "id" : "L",
+        "price" : 229,
+        "volume" : "L"
+      }
+    ],
+    "image" : "Латте",
+    "name" : "Латте",
+    "nutrition" : {
+      "carbs" : "15 г",
+      "fats" : "6 г",
+      "proteins" : "7 г"
+    },
+    "productId" : "latte"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 259,
+    "calories" : "250 ккал",
+    "category" : "Классика",
+    "description" : "Раф — нежный кофейный напиток, приготовленный с добавлением сливок, сахара и ванильного сиропа.",
+    "drinkTag" : [
+      "Бархатный",
+      "Ванильный",
+      "Кремовый"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 259,
+        "volume" : "M"
+      }
+    ],
+    "image" : "раф",
+    "name" : "Раф",
+    "nutrition" : {
+      "carbs" : "25 г",
+      "fats" : "12 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "raf"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 169,
+    "calories" : "140 ккал",
+    "category" : "Классика",
+    "description" : "Флэт-уайт — это крепкий кофе с насыщенным вкусом, созданный на основе двойного эспрессо и небольшого количества взбитого молока.",
+    "drinkTag" : [
+      "Бодрящий",
+      "Молочная пенка",
+      "Насыщенный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 169,
+        "volume" : "S"
+      }
+    ],
+    "image" : "флэтУайт",
+    "name" : "Флэт-уайт",
+    "nutrition" : {
+      "carbs" : "10 г",
+      "fats" : "5 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "flat"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 149,
+    "calories" : "10 ккал",
+    "category" : "Классика",
+    "description" : "Фильтр-кофе — это классический способ заваривания кофе, который подчеркивает чистоту вкуса и аромата.",
+    "drinkTag" : [
+      "Классика",
+      "Тёплый",
+      "Бодрящий"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 149,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 199,
+        "volume" : "M"
+      }
+    ],
+    "image" : "Фильтр",
+    "name" : "Фильтр",
+    "nutrition" : {
+      "carbs" : "2 г",
+      "fats" : "0 г",
+      "proteins" : "1 г"
+    },
+    "productId" : "filter"
+  },
+  {
+    "basePrice" : 250,
+    "calories" : "270 ккал",
+    "category" : "Новинки",
+    "description" : "",
+    "drinkTag" : [
+      "Бархатный",
+      "Пряный",
+      "Сливочный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 250,
+        "volume" : "M"
+      }
+    ],
+    "image" : "БанановоПряныйЛатте",
+    "name" : "Бананово-пряный латте",
+    "nutrition" : {
+      "carbs" : "32 г",
+      "fats" : "11 г",
+      "proteins" : "5 г"
+    },
+    "productId" : "bananaRaf"
+  },
+  {
+    "basePrice" : 359,
+    "calories" : "280 ккал",
+    "category" : "Новинки",
+    "description" : "",
+    "drinkTag" : [
+      "Пряный",
+      "Сливочный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 359,
+        "volume" : "M"
+      }
+    ],
+    "image" : "ТыквеныйРаф",
+    "name" : "Тыквенный раф",
+    "nutrition" : {
+      "carbs" : "34 г",
+      "fats" : "12 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "pampkinRaf"
+  },
+  {
+    "basePrice" : 349,
+    "calories" : "280 ккал",
+    "category" : "Новинки",
+    "description" : "",
+    "drinkTag" : [
+      "Бархатный",
+      "Кремовый"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 349,
+        "volume" : "M"
+      }
+    ],
+    "image" : "СырныйСанта",
+    "name" : "Сырный Санта",
+    "nutrition" : {
+      "carbs" : "15 г",
+      "fats" : "18 г",
+      "proteins" : "8 г"
+    },
+    "productId" : "cheezeSanta"
+  },
+  {
+    "basePrice" : 349,
+    "calories" : "280 ккал",
+    "category" : "Новинки",
+    "description" : "",
+    "drinkTag" : [
+      "Тёплый",
+      "Сливочный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 349,
+        "volume" : "M"
+      }
+    ],
+    "image" : "КанадскийРаф",
+    "name" : "Канадский раф",
+    "nutrition" : {
+      "carbs" : "30 г",
+      "fats" : "12 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "canadaRaf"
+  },
+  {
+    "basePrice" : 359,
+    "calories" : "280 ккал",
+    "category" : "Авторские напитки",
+    "description" : "",
+    "drinkTag" : [
+      "Шоколадный",
+      "Ореховый"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 359,
+        "volume" : "M"
+      }
+    ],
+    "image" : "ОреховыйМокко",
+    "name" : "Ореховый мокко",
+    "nutrition" : {
+      "carbs" : "32 г",
+      "fats" : "12 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "nutsMokka"
+  },
+  {
+    "basePrice" : 339,
+    "calories" : "280 ккал",
+    "category" : "Авторские напитки",
+    "description" : "",
+    "drinkTag" : [
+      "Матча",
+      "Травяной",
+      "Лёгкий",
+      "Необычно"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 339,
+        "volume" : "M"
+      }
+    ],
+    "image" : "розоваяМатча",
+    "name" : "Розовая матча",
+    "nutrition" : {
+      "carbs" : "28 г",
+      "fats" : "6 г",
+      "proteins" : "4 г"
+    },
+    "productId" : "pinkMatcha"
+  },
+  {
+    "basePrice" : 339,
+    "calories" : "280 ккал",
+    "category" : "Авторские напитки",
+    "description" : "",
+    "drinkTag" : [
+      "Матча",
+      "Ореховый",
+      "Сладкий"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 339,
+        "volume" : "M"
+      }
+    ],
+    "image" : "кокосоваяМатча",
+    "name" : "Кокосовая матча",
+    "nutrition" : {
+      "carbs" : "26 г",
+      "fats" : "8 г",
+      "proteins" : "4 г"
+    },
+    "productId" : "coconutMatcha"
+  },
+  {
+    "basePrice" : 239,
+    "calories" : "280 ккал",
+    "category" : "Авторские напитки",
+    "description" : "",
+    "drinkTag" : [
+      "Лёгкий",
+      "Освежающий",
+      "Холодный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 239,
+        "volume" : "M"
+      }
+    ],
+    "image" : "айс-латте",
+    "name" : "Айс-латте",
+    "nutrition" : {
+      "carbs" : "15 г",
+      "fats" : "5 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "icedLatte"
+  },
+  {
+    "basePrice" : 149,
+    "calories" : "280 ккал",
+    "category" : "Не кофе",
+    "description" : "",
+    "drinkTag" : [
+      "Ореховый",
+      "Тёплый",
+      "Сладкий"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 159,
+        "volume" : "M"
+      }
+    ],
+    "image" : "какао",
+    "name" : "Какао",
+    "nutrition" : {
+      "carbs" : "28 г",
+      "fats" : "8 г",
+      "proteins" : "5 г"
+    },
+    "productId" : "cacao"
+  },
+  {
+    "basePrice" : 229,
+    "calories" : "280 ккал",
+    "category" : "Не кофе",
+    "description" : "",
+    "drinkTag" : [
+      "Матча",
+      "Молочная пенка"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 229,
+        "volume" : "M"
+      }
+    ],
+    "image" : "матчаЛатте",
+    "name" : "Матча латте",
+    "nutrition" : {
+      "carbs" : "24 г",
+      "fats" : "6 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "matchaLatte"
+  },
+  {
+    "basePrice" : 239,
+    "calories" : "150 ккал",
+    "category" : "Не кофе",
+    "description" : "",
+    "drinkTag" : [
+      "Фруктовый",
+      "Освежающий",
+      "Холодный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 239,
+        "volume" : "M"
+      }
+    ],
+    "image" : "Лимонад",
+    "name" : "Лимонад",
+    "nutrition" : {
+      "carbs" : "37 г",
+      "fats" : "0 г",
+      "proteins" : "0 г"
+    },
+    "productId" : "lemonade"
+  },
+  {
+    "basePrice" : 159,
+    "calories" : "280 ккал",
+    "category" : "Не кофе",
+    "description" : "",
+    "drinkTag" : [
+      "Сладкий",
+      "Холодный",
+      "Ванильный"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "M",
+        "price" : 159,
+        "volume" : "M"
+      }
+    ],
+    "image" : "МолочныйКоктейль",
+    "name" : "Молочный коктейль",
+    "nutrition" : {
+      "carbs" : "30 г",
+      "fats" : "10 г",
+      "proteins" : "8 г"
+    },
+    "productId" : "milkshake"
+  },
+  {
+    "basePrice" : 199,
+    "calories" : "5 ккал",
+    "category" : "Не кофе",
+    "description" : "Все чаи несладкие, завариваются с помощью фильтр-пакета, выберите понравившийся",
+    "drinkTag" : [
+      "Лёгкий",
+      "Травяной",
+      "Тёплый"
+    ],
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 169,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 199,
+        "volume" : "M"
+      }
+    ],
+    "image" : "эрлГрей",
+    "name" : "Чай в ассортименте",
+    "nutrition" : {
+      "carbs" : "1 г",
+      "fats" : "0 г",
+      "proteins" : "0 г"
+    },
+    "productId" : "teaInAssortment",
+    "teaType" : [
+      "Эрл Грей",
+      "Сенча",
+      "Ирландские сливки",
+      "Малина с розмарином",
+      "Вишней чай",
+      "Пряный чай"
+    ]
+  },
+  {
+    "basePrice" : 320,
+    "calories" : "280 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "foodTag" : [
+      "Хрустящая",
+      "На завтрак"
+    ],
+    "image" : "СендвичВетченаТарелка",
+    "name" : "Сэндвич с ветчиной",
+    "nutrition" : {
+      "carbs" : "30 г",
+      "fats" : "12 г",
+      "proteins" : "15 г"
+    },
+    "productId" : "sendwichWithHam",
+    "weight" : "180 г"
+  },
+  {
+    "basePrice" : 369,
+    "calories" : "350 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "foodTag" : [
+      "Вегетарианская",
+      "На завтрак"
+    ],
+    "image" : "ЛососьНаТарелке",
+    "name" : "Сэндвич с лососем",
+    "nutrition" : {
+      "carbs" : "30 г",
+      "fats" : "15 г",
+      "proteins" : "17 г"
+    },
+    "productId" : "sendwichWithAvocado",
+    "weight" : "200 г"
+  },
+  {
+    "basePrice" : 119,
+    "calories" : "250 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "foodTag" : [
+      "Вегетарианская",
+      "Хрустящая"
+    ],
+    "image" : "банановаяВафля",
+    "name" : "Венская вафля",
+    "nutrition" : {
+      "carbs" : "28 г",
+      "fats" : "12 г",
+      "proteins" : "5 г"
+    },
+    "productId" : "vienneseWaffle",
+    "weight" : "120 г"
+  },
+  {
+    "basePrice" : 149,
+    "calories" : "200 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "foodTag" : [
+      "На завтрак",
+      "Тёплая"
+    ],
+    "image" : "Мюсли",
+    "name" : "Мультизлаковые мюсли",
+    "nutrition" : {
+      "carbs" : "35 г",
+      "fats" : "5 г",
+      "proteins" : "6 г"
+    },
+    "productId" : "muesly",
+    "weight" : "100 г"
+  },
+  {
+    "basePrice" : 109,
+    "calories" : "220 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "foodTag" : [
+      "Сладкая",
+      "Классика"
+    ],
+    "image" : "Панкейки3Кленовый",
+    "name" : "Оладьи",
+    "nutrition" : {
+      "carbs" : "35 г",
+      "fats" : "6 г",
+      "proteins" : "5 г"
+    },
+    "productId" : "pancakes",
+    "weight" : "120 г"
+  },
+  {
+    "basePrice" : 259,
+    "calories" : "280 ккал",
+    "category" : "Перекусить",
+    "description" : "",
+    "fixedSizes" : [
+      {
+        "id" : "S",
+        "price" : 189,
+        "volume" : "S"
+      },
+      {
+        "id" : "M",
+        "price" : 259,
+        "volume" : "M"
+      }
+    ],
+    "foodTag" : [
+      "Сырная",
+      "На завтрак"
+    ],
+    "image" : "Сырники2Клубника",
+    "images" : [
+      "Сырники2Клубника",
+      "Сырники3Сметана"
+    ],
+    "name" : "Сырники",
+    "nutrition" : {
+      "carbs" : "32 г",
+      "fats" : "10 г",
+      "proteins" : "8 г"
+    },
+    "productId" : "syrniki",
+    "weight" : "150 г"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 250,
+    "calories" : "10 ккал",
+    "category" : "Авторские напитки",
+    "description" : "Бамбл - это насыщенный эспрессо в сочетании с апельсиновым соком",
+    "drinkTag" : [
+      "Фруктовый",
+      "Бодрящий"
+    ],
+    "image" : "Бамбл",
+    "name" : "Бамбл-кофе",
+    "nutrition" : {
+      "carbs" : "1 г",
+      "fats" : "0 г",
+      "proteins" : "1 г"
+    },
+    "productId" : "bamble"
+  },
+  {
+    "availableToppings" : [
+      {
+        "category" : "молоко",
+        "id" : "milk",
+        "options" : [
+          {
+            "id" : "milk_coconut",
+            "isSelected" : false,
+            "name" : "кокосовое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_almond",
+            "isSelected" : false,
+            "name" : "миндальное молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_banana",
+            "isSelected" : false,
+            "name" : "банановое молоко",
+            "price" : 50
+          },
+          {
+            "id" : "milk_cow",
+            "isSelected" : false,
+            "name" : "коровье молоко",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "сироп",
+        "id" : "syrup",
+        "options" : [
+          {
+            "id" : "syrup_salted_caramel",
+            "isSelected" : false,
+            "name" : "соленая карамель",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_vanilla",
+            "isSelected" : false,
+            "name" : "ваниль",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_popcorn",
+            "isSelected" : false,
+            "name" : "попкорн",
+            "price" : 20
+          },
+          {
+            "id" : "syrup_none",
+            "isSelected" : false,
+            "name" : "без сиропа",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "лед",
+        "id" : "temperature",
+        "options" : [
+          {
+            "id" : "temp_hot",
+            "isSelected" : false,
+            "name" : "горячий",
+            "price" : 0
+          },
+          {
+            "id" : "temp_cold",
+            "isSelected" : false,
+            "name" : "холодный",
+            "price" : 0
+          }
+        ]
+      },
+      {
+        "category" : "дополнительно",
+        "id" : "additional",
+        "options" : [
+          {
+            "id" : "extra_milk",
+            "isSelected" : false,
+            "name" : "молоко",
+            "price" : 30
+          },
+          {
+            "id" : "extra_cream",
+            "isSelected" : false,
+            "name" : "сливки",
+            "price" : 40
+          },
+          {
+            "id" : "extra_whipped_cream",
+            "isSelected" : false,
+            "name" : "взбитые сливки",
+            "price" : 55
+          },
+          {
+            "id" : "extra_cinnamon",
+            "isSelected" : false,
+            "name" : "корица",
+            "price" : 0
+          },
+          {
+            "id" : "extra_lemon",
+            "isSelected" : false,
+            "name" : "лимон",
+            "price" : 10
+          },
+          {
+            "id" : "extra_none",
+            "isSelected" : false,
+            "name" : "без всего",
+            "price" : 0
+          }
+        ]
+      }
+    ],
+    "basePrice" : 250,
+    "calories" : "250 ккал",
+    "category" : "Авторские напитки",
+    "description" : "Эспрессо-тоник - это насыщенный эспрессо в сочетании с швепсом",
+    "drinkTag" : [
+      "Фруктовый",
+      "Бодрящий"
+    ],
+    "image" : "ЭспрессоТоник",
+    "name" : "Эспрессо-тоник",
+    "nutrition" : {
+      "carbs" : "1 г",
+      "fats" : "0 г",
+      "proteins" : "1 г"
+    },
+    "productId" : "tonic"
+  }
+]

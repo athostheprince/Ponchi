@@ -17,19 +17,21 @@ struct SegmentItemView: View {
 
     var body: some View {
         Text(title)
+            .bold()
             .padding(.vertical, 10)
             .padding(.horizontal, 20)
             .background(
                 ZStack {
                     if isSelected {
                         RoundedRectangle(cornerRadius: 25)
-                            .fill(color)
+                            .fill(Color.brightGreen)
                             .matchedGeometryEffect(id: "segment", in: animationNamespace)
                     }
                 }
             )
-            .foregroundColor(isSelected ? .white : Color(hex: "#F99CA0"))
+            .foregroundColor(isSelected ? .peony : .secondary)
             .onTapGesture {
+                HapticManager.tap()
                 onTap()
             }
     }
@@ -58,6 +60,8 @@ struct PonCustomSegmentPicker: View {
                         ) {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5)) {
                                 selectedCategory = category
+                            }
+                            DispatchQueue.main.async {
                                 proxy.scrollTo(category, anchor: .top)
                             }
                         }
@@ -66,8 +70,16 @@ struct PonCustomSegmentPicker: View {
                 }
                 .padding(.horizontal)
             }
+            .onAppear {
+                if let selectedCategory {
+                    DispatchQueue.main.async {
+                        proxy.scrollTo(selectedCategory, anchor: .center)
+                    }
+                }
+            }
             .onChange(of: selectedCategory) { oldValue, newValue in
                 guard let newValue else { return }
+                HapticManager.scroll()
                 withAnimation {
                     proxy.scrollTo(newValue, anchor: .center)
                 }
@@ -79,7 +91,6 @@ struct PonCustomSegmentPicker: View {
 struct CustomSegmentPicker: View {
     
     @EnvironmentObject var ponchiViewModel: PonchiViewModel
-    
     @Namespace private var animationNamespace
     
     let categories: [Size]
@@ -101,7 +112,9 @@ struct CustomSegmentPicker: View {
                 .id(size)
             }
         }
-        .background(color)
+        .background(Color.peony)
         .cornerRadius(20)
     }
 }
+
+

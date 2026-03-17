@@ -4,7 +4,12 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Piter_Sans.ttf</string>
+		<string>LEPKA.otf</string>
+		<string>Soledago.ttf</string>
+		<string>CaviarDreams.ttf</string>
+		<string>CaviarDreams_Bold.ttf</string>
+		<string>ofont.ru_Uncage.ttf</string>
+		<string>Gothic60-Regular.otf</string>
 	</array>
 </dict>
 </plist>

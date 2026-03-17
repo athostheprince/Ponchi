@@ -12,29 +12,29 @@ struct EmptyOrderView: View {
     var imageName: String
     var message: String
     
+    var action: () -> Void
+    
     var body: some View {
         ZStack {
-            Color(.systemBackground)
+            Color(Color.biege)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 150)
+                    .frame(height: 180)
                 
                 Text(message)
-                    .font(.title2)
-                    .fontWeight(.semibold)
+                    .font(.caviarb(25))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
                     .padding()
+                
+                GlassButton(title: "вернуться в меню", action: withAnimation { action })
+                
             }
             .offset(y: -50)
         }
     }
-}
-
-#Preview {
-    EmptyOrderView(imageName: "emptyOrder", message: "Вы еще ничего не выбрали!")
 }

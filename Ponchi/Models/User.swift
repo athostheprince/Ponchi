@@ -10,5 +10,7 @@ import Foundation
 struct User: Codable, Identifiable {
     var id: Int
     var name: String
-    var number: String 
+    var number: String
+    var bonuses: Int
+    var avatar: String? 
 }

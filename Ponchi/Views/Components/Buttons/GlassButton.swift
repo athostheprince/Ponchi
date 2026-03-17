@@ -14,20 +14,19 @@ struct GlassButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.title2)
+            Text(title.lowercased())
+                .font(.caviarb(20))
                 .bold()
-                .padding(.horizontal, 32)
-                .padding(.vertical, 14)
+                .padding(.horizontal)
+                .padding(.vertical, 10)
                 .background(
                     ZStack {
                         // почти прозрачное стекло
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.ultraThinMaterial)
-                            .opacity(0.6)
+                        Capsule()
+                            .fill(Color.brightGreen)
                         
                         // блик сверху
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                       Capsule()
                             .fill(
                                 LinearGradient(
                                     gradient: Gradient(colors: [
@@ -43,12 +42,12 @@ struct GlassButton: View {
                 )
                 // обводка по краю
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                   Capsule()
+                        .stroke(Color.brightGreen, lineWidth: 2)
                 )
                 // specular-блик сверху
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                   Capsule()
                         .stroke(
                             LinearGradient(
                                 gradient: Gradient(stops: [
@@ -64,6 +63,10 @@ struct GlassButton: View {
                 // тень снизу
                 //.shadow(color: Color.black.opacity(0.25), radius: 10, x: 0, y: 5)
         }
-        .foregroundColor(.black.opacity(0.5))
+        .foregroundColor(Color.peony)
     }
+}
+
+#Preview {
+    GlassButton(title: "добавить в корзину", action: {})
 }

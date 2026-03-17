@@ -9,17 +9,48 @@ import Foundation
 import SwiftUI
 
 struct Ponchi: Identifiable, Codable, Equatable {
+    
+    var productId: String
     var id: String { generateID() }
+    
     var name: String
     var category: Category
     var basePrice: Int
     var image: String
+    
+    var displayImge: String {
+        if let tea = selectedTeaType {
+            return tea.imageName
+        }
+        return image
+    }
+    
+    var images: [String]?
     var description: String
     var size: Size? = .medium
     var calories: String
     var weight: String?
     var quantity = 1
+    var cookingTime: Int {
+        switch category {
+        case .coffee: return 2
+        case .signatureDrincks: return 4
+        case .new: return 5
+        case .notCoffee: return 3
+        case .food: return 7
+        }
+    }
+
     
+    var nutrition: Nutrition?
+    
+    var fixedSizes: [SizePicker]?
+    var availableToppings: [Topping]?
+    
+    var drinkTag: [DrinkTag]?
+    var foodTag: [FoodTag]?
+    
+    // MARK: - Размер
     var ml: String {
         switch size {
         case .small: return "200 мл"
@@ -29,76 +60,87 @@ struct Ponchi: Identifiable, Codable, Equatable {
         }
     }
     
-    var fixedSizes: [SizePicker]?
-    
-    var hasTopping: Bool {
-        availableToppings != nil
+    var hasMultipleSizes: Bool {
+        size != .noSize && (fixedSizes?.count ?? 0) > 1
     }
     
-    var availableToppings: [Topping]?
-    
-    var drinkTag: [DrinkTag]?
-    var foodTag: [FoodTag]?
-    
-    var selectedToppings: [ToppingOption] {
-        availableToppings?.flatMap { $0.options.filter { $0.isSelected } } ?? []
-    }
-
-    // Цена выбранного размера
     var currentSizePrice: Int {
         guard let size = size else { return basePrice }
         return fixedSizes?.first(where: { $0.volume == size })?.price ?? basePrice
     }
     
-    // Цена молока (50 для любого, кроме коровьего)
+    // MARK: - Топпинги
+    var hasTopping: Bool {
+        guard let available = availableToppings else { return false }
+        return !available.isEmpty
+    }
+    
+    var selectedToppings: [ToppingOption] {
+        availableToppings?.flatMap { $0.options.filter { $0.isSelected } } ?? []
+    }
+    
     var milkPrice: Int {
-        let milkTopping = selectedToppings.first { topping in
-            availableToppings?.first { $0.category == .milk }?.options.contains { $0.id == topping.id } ?? false
-        }
-        return (milkTopping?.name != "коровье молоко") ? 50 : 0
+        guard let milkTopping = selectedToppings.first(
+            where: { topping in
+                availableToppings?.first { $0.category == .milk }?.options.contains(where: { $0.id == topping.id }) ?? false
+            }
+        ) else { return 0 }
+        return milkTopping.name != "коровье молоко" ? 50 : 0
     }
     
-    // Цена сиропа (20 для любого, кроме "без сиропа")
     var syrupPrice: Int {
-        let syrupTopping = selectedToppings.first { topping in
-            availableToppings?.first { $0.category == .syrop }?.options.contains { $0.id == topping.id } ?? false
-        }
-        return (syrupTopping?.name != "без сиропа") ? 20 : 0
+        guard let syrupTopping = selectedToppings.first(
+            where: { topping in
+                availableToppings?.first { $0.category == .syrop }?.options.contains(where: { $0.id == topping.id }) ?? false
+            }
+        ) else { return 0 }
+        return syrupTopping.name != "без сиропа" ? 20 : 0
     }
     
-    // Итоговая цена
     var totalPrice: Int {
-        let price = currentSizePrice + milkPrice + syrupPrice
+        let toppingsPrice = milkPrice + syrupPrice
+        let price = currentSizePrice + toppingsPrice
         return price * quantity
     }
     
-    // Описание выбранных топпингов
+    var teaType: [TeaType]? 
+    var selectedTeaType: TeaType? 
+    
     var selectedToppingsDescription: String {
         let grouped = Dictionary(grouping: selectedToppings) { option in
             availableToppings?.first { $0.options.contains(where: { $0.id == option.id }) }?.category
         }
-        
-        return grouped.map { (category, options) in
+        return grouped.map { category, options in
             let topOption = options.max(by: { $0.price < $1.price })?.name ?? ""
             return "\(category?.rawValue ?? ""): \(topOption)"
         }.joined(separator: ", ")
     }
-
+    
+    enum CodingKeys: String, CodingKey {
+        case productId
+        case name, category, basePrice, image, images, description
+        case calories, weight, nutrition
+        case fixedSizes, availableToppings
+        case drinkTag, foodTag, teaType
+    }
+    
+    // MARK: - Equatable
     static func == (lhs: Ponchi, rhs: Ponchi) -> Bool {
-        return lhs.isEquivalent(to: rhs)
+        lhs.isEquivalent(to: rhs)
     }
     
     func isEquivalent(to other: Ponchi) -> Bool {
-        return self.name == other.name &&
-        self.size == other.size &&
-        self.selectedToppings == other.selectedToppings
+        return name == other.name &&
+               size == other.size &&
+               selectedToppings == other.selectedToppings
     }
     
+    // MARK: - Helpers
     func generateID() -> String {
         let toppingsString = selectedToppings.map { $0.name }.joined(separator: ",")
-        return "\(name)-\(size?.rawValue ?? "")-\(toppingsString)"
+        return "\(productId)-\(size?.rawValue ?? "")-\(toppingsString)"
     }
-
+    
     func withUpdatedToppings(_ toppings: [Topping]) -> Ponchi {
         var updated = self
         updated.availableToppings = toppings
@@ -106,20 +148,33 @@ struct Ponchi: Identifiable, Codable, Equatable {
     }
 }
 
+struct Nutrition: Codable, Equatable {
+    var proteins: String
+    var fats: String
+    var carbs: String
+}
+
+
 struct SizePicker: Codable, Identifiable, Equatable {
-    var id = UUID()
+    var id: String
     var volume: Size
     var price: Int
+
+    init(volume: Size, price: Int) {
+        self.id = volume.rawValue
+        self.volume = volume
+        self.price = price
+    }
 }
 
 struct Topping: Codable, Identifiable, Equatable {
-    var id = UUID()
+    var id: String
     var category: ToppingCategory
     var options: [ToppingOption]
 }
 
 struct ToppingOption: Codable, Identifiable, Equatable {
-    var id = UUID()
+    var id: String
     var name: String
     var price: Int
     var isSelected: Bool = false
@@ -146,6 +201,29 @@ enum Size: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+enum TeaType: String, Codable, CaseIterable, Identifiable {
+    
+    case earlGrey = "Эрл Грей"
+    case sencha = "Сенча"
+    case irishCream = "Ирландские сливки"
+    case raspberryRosemary = "Малина с розмарином"
+    case cherry = "Вишней чай"
+    case spicy = "Пряный чай"
+    
+    var id: String { rawValue }
+    
+    var imageName: String {
+        switch self {
+        case .cherry: return "вишневыйЧай"
+        case .earlGrey: return "эрлГрей"
+        case .sencha: return "сенча"
+        case .irishCream: return "ирландскиеСливки"
+        case .raspberryRosemary: return "малинаРозмарин"
+        case .spicy: return "пряныйЧай"
+        }
+    }
+}
+
 enum Category: String, Codable, CaseIterable, Identifiable {
     
     var id: String { rawValue }
@@ -156,36 +234,36 @@ enum Category: String, Codable, CaseIterable, Identifiable {
     case food = "Перекусить"
     case signatureDrincks = "Авторские напитки"
     
-    var items: [String] {
-        MockPonchiData.all.filter { $0.category == self }.map { $0.name }
-    }
+//    var items: [String] {
+//        MockPonchiData.all.filter { $0.category == self }.map { $0.name }
+//    }
 }
 
 struct ToppingStore {
     static let availableToppings: [Topping] = [
-        Topping(category: .milk, options: [
-            ToppingOption(name: "кокосовое молоко", price: 50),
-            ToppingOption(name: "миндальное молоко", price: 50),
-            ToppingOption(name: "банановое молоко", price: 50),
-            ToppingOption(name: "коровье молоко", price: 0)
-            ]),
-        Topping(category: .syrop, options: [
-            ToppingOption(name: "соленая карамель", price: 20),
-            ToppingOption(name: "ваниль", price: 20),
-            ToppingOption(name: "попкорн", price: 20),
-            ToppingOption(name: "без сиропа", price: 0)
+        Topping(id: "milk", category: .milk, options: [
+            ToppingOption(id: "milk_coconut", name: "кокосовое молоко", price: 50),
+            ToppingOption(id: "milk_almond", name: "миндальное молоко", price: 50),
+            ToppingOption(id: "milk_banana", name: "банановое молоко", price: 50),
+            ToppingOption(id: "milk_cow", name: "коровье молоко", price: 0)
         ]),
-        Topping(category: .temperature, options: [
-            ToppingOption(name: "горячий", price: 0),
-            ToppingOption(name: "холодный", price: 0)
+        Topping(id: "syrup", category: .syrop, options: [
+            ToppingOption(id: "syrup_salted_caramel", name: "соленая карамель", price: 20),
+            ToppingOption(id: "syrup_vanilla", name: "ваниль", price: 20),
+            ToppingOption(id: "syrup_popcorn", name: "попкорн", price: 20),
+            ToppingOption(id: "syrup_none", name: "без сиропа", price: 0)
         ]),
-        Topping(category: .aditionaly, options: [
-            ToppingOption(name: "молоко", price: 30),
-            ToppingOption(name: "сливки", price: 40),
-            ToppingOption(name: "взбитые сливки", price: 55),
-            ToppingOption(name: "корица", price: 0),
-            ToppingOption(name: "лимон", price: 10),
-            ToppingOption(name: "без всего", price: 0)
+        Topping(id: "temperature", category: .temperature, options: [
+            ToppingOption(id: "temp_hot", name: "горячий", price: 0),
+            ToppingOption(id: "temp_cold", name: "холодный", price: 0)
+        ]),
+        Topping(id: "additional", category: .aditionaly, options: [
+            ToppingOption(id: "extra_milk", name: "молоко", price: 30),
+            ToppingOption(id: "extra_cream", name: "сливки", price: 40),
+            ToppingOption(id: "extra_whipped_cream", name: "взбитые сливки", price: 55),
+            ToppingOption(id: "extra_cinnamon", name: "корица", price: 0),
+            ToppingOption(id: "extra_lemon", name: "лимон", price: 10),
+            ToppingOption(id: "extra_none", name: "без всего", price: 0)
         ]),
     ]
 }
@@ -328,13 +406,16 @@ enum FoodTag: String, CaseIterable, Identifiable, Codable {
 }
 
 struct MockPonchiData {
+    
     static let cappuccino = Ponchi(
+        productId: "cappuccino",
         name: "Капучино",
         category: .coffee,
         basePrice: 149,
-        image: "capuccino",
+        image: "Капуч",
         description: "Капучино — это гармоничное сочетание эспрессо, горячего молока и нежной молочной пенки.",
         calories: "130 ккал",
+        nutrition: Nutrition(proteins: "6 г", fats: "5 г", carbs: "12 г"),
         fixedSizes: [
             SizePicker(volume: .small, price: 149),
             SizePicker(volume: .medium, price: 179),
@@ -345,12 +426,14 @@ struct MockPonchiData {
     )
     
     static let americano = Ponchi(
+        productId: "americano",
         name: "Американо",
         category: .coffee,
         basePrice: 125,
-        image: "americano",
+        image: "Американо",
         description: "Американо — это классический черный кофе, приготовленный путем добавления горячей воды к порции эспрессо.",
         calories: "10 ккал",
+        nutrition: Nutrition(proteins: "0 г", fats: "0 г", carbs: "1 г"),
         fixedSizes: [
             SizePicker(volume: .small, price: 125),
             SizePicker(volume: .medium, price: 159)
@@ -360,12 +443,14 @@ struct MockPonchiData {
     )
     
     static let espresso = Ponchi(
+        productId: "espresso",
         name: "Эспрессо",
         category: .coffee,
         basePrice: 99,
-        image: "espresso",
+        image: "эспрессо",
         description: "Эспрессо — крепкий и насыщенный напиток, который подается в небольшом объеме.",
         calories: "10 ккал",
+        nutrition: Nutrition(proteins: "1 г", fats: "0 г", carbs: "1 г"),
         fixedSizes: [
             SizePicker(volume: .small, price: 99),
             SizePicker(volume: .medium, price: 125)
@@ -374,13 +459,41 @@ struct MockPonchiData {
         drinkTag: [.классика, .бодрящий]
     )
     
+    static let bamble = Ponchi(
+        productId: "bamble",
+        name: "Бамбл-кофе",
+        category: .signatureDrincks,
+        basePrice: 250,
+        image: "Бамбл",
+        description: "Бамбл - это насыщенный эспрессо в сочетании с апельсиновым соком",
+        calories: "10 ккал",
+        nutrition: Nutrition(proteins: "1 г", fats: "0 г", carbs: "1 г"),
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.фруктовый, .бодрящий]
+    )
+    
+    static let tonic = Ponchi(
+        productId: "tonic",
+        name: "Эспрессо-тоник",
+        category: .signatureDrincks,
+        basePrice: 250,
+        image: "ЭспрессоТоник",
+        description: "Эспрессо-тоник - это насыщенный эспрессо в сочетании с швепсом",
+        calories: "250 ккал",
+        nutrition: Nutrition(proteins: "1 г", fats: "0 г", carbs: "1 г"),
+        availableToppings: ToppingStore.availableToppings,
+        drinkTag: [.фруктовый, .бодрящий]
+    )
+    
     static let latte = Ponchi(
+        productId: "latte",
         name: "Латте",
         category: .coffee,
         basePrice: 179,
-        image: "latte",
+        image: "Латте",
         description: "Латте — классический молочный напиток с эспрессо, который отличается мягким вкусом и легкой сливочной текстурой.",
         calories: "170 ккал",
+        nutrition: Nutrition(proteins: "7 г", fats: "6 г", carbs: "15 г"),
         fixedSizes: [
             SizePicker(volume: .medium, price: 179),
             SizePicker(volume: .large, price: 229)
@@ -390,40 +503,42 @@ struct MockPonchiData {
     )
     
     static let raf = Ponchi(
+        productId: "raf",
         name: "Раф",
         category: .coffee,
         basePrice: 259,
-        image: "raf",
+        image: "раф",
         description: "Раф — нежный кофейный напиток, приготовленный с добавлением сливок, сахара и ванильного сиропа.",
         calories: "250 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 259) // Только один размер
-        ],
+        nutrition: Nutrition(proteins: "6 г", fats: "12 г", carbs: "25 г"),
+        fixedSizes: [SizePicker(volume: .medium, price: 259)],
         availableToppings: ToppingStore.availableToppings,
         drinkTag: [.бархатный, .ванильный, .кремовый]
     )
     
     static let flat = Ponchi(
+        productId: "flat",
         name: "Флэт-уайт",
         category: .coffee,
         basePrice: 169,
-        image: "flat",
+        image: "флэтУайт",
         description: "Флэт-уайт — это крепкий кофе с насыщенным вкусом, созданный на основе двойного эспрессо и небольшого количества взбитого молока.",
         calories: "140 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169) // Только один размер
-        ],
+        nutrition: Nutrition(proteins: "6 г", fats: "5 г", carbs: "10 г"),
+        fixedSizes: [SizePicker(volume: .small, price: 169)],
         availableToppings: ToppingStore.availableToppings,
         drinkTag: [.бодрящий, .молочнаяПенка, .насыщенный]
     )
     
     static let filter = Ponchi(
+        productId: "filter",
         name: "Фильтр",
         category: .coffee,
-        basePrice: 149, 
-        image: "filter",
+        basePrice: 149,
+        image: "Фильтр",
         description: "Фильтр-кофе — это классический способ заваривания кофе, который подчеркивает чистоту вкуса и аромата.",
         calories: "10 ккал",
+        nutrition: Nutrition(proteins: "1 г", fats: "0 г", carbs: "2 г"),
         fixedSizes: [
             SizePicker(volume: .small, price: 149),
             SizePicker(volume: .medium, price: 199)
@@ -433,273 +548,319 @@ struct MockPonchiData {
     )
     
     static let bananaRaf = Ponchi(
-        name: "Бананово-пряный раф",
-        category: .signatureDrincks,
+        productId: "bananaRaf",
+        name: "Бананово-пряный латте",
+        category: .new,
         basePrice: 250,
-        image: "",
+        image: "БанановоПряныйЛатте",
         description: "",
         calories: "270 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 250)
-        ],
+        nutrition: Nutrition(proteins: "5 г", fats: "11 г", carbs: "32 г"),
+        fixedSizes: [SizePicker(volume: .medium, price: 250)],
         drinkTag: [.бархатный, .пряный, .сливочный]
     )
     
     static let pampkinRaf = Ponchi(
+        productId: "pampkinRaf",
         name: "Тыквенный раф",
         category: .new,
         basePrice: 359,
-        image: "",
+        image: "ТыквеныйРаф",
         description: "",
         calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .medium, price: 359)
-        ],
+        nutrition: Nutrition(proteins: "6 г", fats: "12 г", carbs: "34 г"),
+        fixedSizes: [SizePicker(volume: .medium, price: 359)],
         drinkTag: [.пряный, .сливочный]
     )
     
     static let cheezeSanta = Ponchi(
+        productId: "cheezeSanta",
         name: "Сырный Санта",
         category: .new,
         basePrice: 349,
-        image: "",
+        image: "СырныйСанта",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "8 г", fats: "18 г", carbs: "15 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 349)],
-        drinkTag: [.бархатный, .кремовый])
-
+        drinkTag: [.бархатный, .кремовый]
+    )
+    
     static let canadaRaf = Ponchi(
+        productId: "canadaRaf",
         name: "Канадский раф",
         category: .new,
         basePrice: 349,
-        image: "",
+        image: "КанадскийРаф",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "6 г", fats: "12 г", carbs: "30 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 349)],
-        drinkTag: [.тёплый, .сливочный])
-
+        drinkTag: [.тёплый, .сливочный]
+    )
+    
     static let spicyPear = Ponchi(
+        productId: "spicyPear",
         name: "Пряная груша",
-        category: .new,
+        category: .notCoffee,
         basePrice: 359,
-        image: "",
+        image: "ГрушевыйРаф",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "2 г", fats: "8 г", carbs: "40 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 359)],
-        drinkTag: [.фруктовый, .пряный])
-
+        drinkTag: [.фруктовый, .пряный]
+    )
+    
     static let nutsMokka = Ponchi(
+        productId: "nutsMokka",
         name: "Ореховый мокко",
         category: .signatureDrincks,
         basePrice: 359,
-        image: "",
+        image: "ОреховыйМокко",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "6 г", fats: "12 г", carbs: "32 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 359)],
-        drinkTag: [.шоколадный, .ореховый])
-
+        drinkTag: [.шоколадный, .ореховый]
+    )
+    
     static let pinkMatcha = Ponchi(
+        productId: "pinkMatcha",
         name: "Розовая матча",
         category: .signatureDrincks,
         basePrice: 339,
-        image: "",
+        image: "розоваяМатча",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "4 г", fats: "6 г", carbs: "28 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 339)],
-        drinkTag: [.матча, .травяной, .лёгкий, .необычно])
-
+        drinkTag: [.матча, .травяной, .лёгкий, .необычно]
+    )
+    
     static let coconutMatcha = Ponchi(
+        productId: "coconutMatcha",
         name: "Кокосовая матча",
         category: .signatureDrincks,
         basePrice: 339,
-        image: "",
+        image: "кокосоваяМатча",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "4 г", fats: "8 г", carbs: "26 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 339)],
-        drinkTag: [.матча, .ореховый, .сладкий])
-
+        drinkTag: [.матча, .ореховый, .сладкий]
+    )
+    
     static let iceLatte = Ponchi(
+        productId: "icedLatte",
         name: "Айс-латте",
         category: .signatureDrincks,
         basePrice: 239,
-        image: "",
+        image: "айс-латте",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "6 г", fats: "5 г", carbs: "15 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 239)],
-        drinkTag: [.лёгкий, .освежающий, .холодный])
-
+        drinkTag: [.лёгкий, .освежающий, .холодный]
+    )
+    
     static let cacao = Ponchi(
+        productId: "cacao",
         name: "Какао",
         category: .notCoffee,
         basePrice: 149,
-        image: "",
+        image: "какао",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "5 г", fats: "8 г", carbs: "28 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 159)],
-        drinkTag: [.ореховый, .тёплый, .сладкий])
-
+        drinkTag: [.ореховый, .тёплый, .сладкий]
+    )
+    
     static let matchaLatte = Ponchi(
+        productId: "matchaLatte",
         name: "Матча латте",
         category: .notCoffee,
         basePrice: 229,
-        image: "",
+        image: "матчаЛатте",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "6 г", fats: "6 г", carbs: "24 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 229)],
-        drinkTag: [.матча, .молочнаяПенка])
-
+        drinkTag: [.матча, .молочнаяПенка]
+    )
+    
     static let lemonade = Ponchi(
+        productId: "lemonade",
         name: "Лимонад",
         category: .notCoffee,
         basePrice: 239,
-        image: "",
+        image: "Лимонад",
         description: "",
-        calories: "280 ккал",
+        calories: "150 ккал",
+        nutrition: Nutrition(proteins: "0 г", fats: "0 г", carbs: "37 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 239)],
-        drinkTag: [.фруктовый, .освежающий, .холодный])
-
+        drinkTag: [.фруктовый, .освежающий, .холодный]
+    )
+    
     static let milkShake = Ponchi(
+        productId: "milkshake",
         name: "Молочный коктейль",
         category: .notCoffee,
         basePrice: 159,
-        image: "",
+        image: "МолочныйКоктейль",
         description: "",
         calories: "280 ккал",
+        nutrition: Nutrition(proteins: "8 г", fats: "10 г", carbs: "30 г"),
         fixedSizes: [SizePicker(volume: .medium, price: 159)],
-        drinkTag: [.сладкий, .холодный, .ванильный])
-
-    static let earlGray = Ponchi(
-        name: "Эрл Грей",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.лёгкий, .травяной, .тёплый])
-
-    static let raspberriesWithRosemary = Ponchi(
-        name: "Малина с розмарином",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.травяной, .сладкий, .освежающий])
-
-    static let irishCream = Ponchi(
-        name: "Ирландские сливки",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.ореховый, .тёплый, .сладкий])
-
-    static let spicyTea = Ponchi(
-        name: "Пряный чай",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.пряный, .тёплый])
-
-    static let cherryTea = Ponchi(
-        name: "Вишневый чай",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.тёплый, .фруктовый])
-
-    static let sencha = Ponchi(
-        name: "Зеленый чай вечерний",
-        category: .notCoffee,
-        basePrice: 199,
-        image: "",
-        description: "",
-        calories: "280 ккал",
-        fixedSizes: [
-            SizePicker(volume: .small, price: 169),
-            SizePicker(volume: .medium, price: 199)],
-        drinkTag: [.травяной, .лёгкий])
-
+        drinkTag: [.сладкий, .холодный, .ванильный]
+    )
     
+    static let teaInAssortment = Ponchi(
+        productId: "teaInAssortment",
+        name: "Чай в ассортименте",
+        category: .notCoffee,
+        basePrice: 199,
+        image: "эрлГрей",
+        description: "Все чаи несладкие, завариваются с помощью фильтр-пакета, выберите понравившийся",
+        calories: "5 ккал",
+        nutrition: Nutrition(proteins: "0 г", fats: "0 г", carbs: "1 г"),
+        fixedSizes: [
+            SizePicker(volume: .small, price: 169),
+            SizePicker(volume: .medium, price: 199)
+        ],
+        drinkTag: [.лёгкий, .травяной, .тёплый],
+        teaType: TeaType.allCases,
+        selectedTeaType: .earlGrey
+    )
+    
+    // Еда
     static let sendwichWithHam = Ponchi(
+        productId: "sendwichWithHam",
         name: "Сэндвич с ветчиной",
         category: .food,
         basePrice: 320,
-        image: "",
+        image: "СендвичВетченаТарелка",
         description: "",
-        calories: "280 ккал")
-    
+        calories: "280 ккал",
+        weight: "180 г",
+        nutrition: Nutrition(proteins: "15 г", fats: "12 г", carbs: "30 г"),
+        foodTag: [.хрустящая, .наЗавтрак]
+    )
+
     static let sendwichWithSelmon = Ponchi(
+        productId: "sendwichWithSelmon",
         name: "Сэндвич с лососем",
         category: .food,
         basePrice: 359,
         image: "",
         description: "",
-        calories: "280 ккал")
-    
+        calories: "320 ккал",
+        weight: "180 г",
+        nutrition: Nutrition(proteins: "18 г", fats: "10 г", carbs: "28 г"),
+        foodTag: [.вегетарианская, .сытная]
+    )
+
     static let sendwichWithAvocado = Ponchi(
-        name: "Тосты с лососем и авокадо",
+        productId: "sendwichWithAvocado",
+        name: "Сэндвич с лососем",
         category: .food,
         basePrice: 369,
-        image: "",
+        image: "ЛососьНаТарелке",
         description: "",
-        calories: "280 ккал")
-    
+        calories: "350 ккал",
+        weight: "200 г",
+        nutrition: Nutrition(proteins: "17 г", fats: "15 г", carbs: "30 г"),
+        foodTag: [.вегетарианская, .наЗавтрак]
+    )
+
     static let vienneseWaffle = Ponchi(
+        productId: "vienneseWaffle",
         name: "Венская вафля",
         category: .food,
         basePrice: 119,
-        image: "",
+        image: "банановаяВафля",
         description: "",
-        calories: "280 ккал")
-    
+        calories: "250 ккал",
+        weight: "120 г",
+        nutrition: Nutrition(proteins: "5 г", fats: "12 г", carbs: "28 г"),
+        foodTag: [.вегетарианская, .хрустящая]
+    )
+
     static let syrniki = Ponchi(
+        productId: "syrniki",
         name: "Сырники",
         category: .food,
         basePrice: 259,
-        image: "",
+        image: "Сырники2Клубника",
+        images: ["Сырники2Клубника", "Сырники3Сметана"],
         description: "",
         calories: "280 ккал",
+        weight: "150 г",
+        nutrition: Nutrition(proteins: "8 г", fats: "10 г", carbs: "32 г"),
         fixedSizes: [
             SizePicker(volume: .small, price: 189),
             SizePicker(volume: .medium, price: 259)
-        ])
-    
+        ],
+        foodTag: [.сырная, .наЗавтрак]
+    )
+
     static let muesly = Ponchi(
+        productId: "muesly",
         name: "Мультизлаковые мюсли",
         category: .food,
         basePrice: 149,
-        image: "",
+        image: "Мюсли",
         description: "",
-        calories: "280 ккал")
-    
+        calories: "200 ккал",
+        weight: "100 г",
+        nutrition: Nutrition(proteins: "6 г", fats: "5 г", carbs: "35 г"),
+        foodTag: [.наЗавтрак, .тёплая]
+    )
+
     static let pancakes = Ponchi(
+        productId: "pancakes",
         name: "Оладьи",
         category: .food,
         basePrice: 109,
-        image: "",
+        image: "Панкейки3Кленовый",
         description: "",
-        calories: "280 ккал")
+        calories: "220 ккал",
+        weight: "120 г",
+        nutrition: Nutrition(proteins: "5 г", fats: "6 г", carbs: "35 г"),
+        foodTag: [.сладкая, .классика]
+    )
     
-    static let all: [Ponchi] = [cappuccino, americano, espresso, latte, raf, flat, filter, bananaRaf, pampkinRaf, cheezeSanta, canadaRaf, spicyPear, nutsMokka, pinkMatcha, coconutMatcha, iceLatte, cacao, matchaLatte, lemonade, milkShake, earlGray,raspberriesWithRosemary, irishCream, spicyTea, cherryTea, sencha, sendwichWithHam, sendwichWithSelmon, sendwichWithAvocado, vienneseWaffle, muesly, pancakes, syrniki]
+    static let all: [Ponchi] = [cappuccino, americano, espresso, latte, raf, flat, filter, bananaRaf, pampkinRaf, cheezeSanta, canadaRaf, nutsMokka, pinkMatcha, coconutMatcha, iceLatte, cacao, matchaLatte, lemonade, milkShake, teaInAssortment, sendwichWithHam, sendwichWithAvocado, vienneseWaffle, muesly, pancakes, syrniki, bamble, tonic]
 }
+
+#if DEBUG
+func exportPonchiJSON() {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+    
+    do {
+        let data = try encoder.encode(MockPonchiData.all)
+        _ = String(data: data, encoding: .utf8) ?? ""
+        //print(json)
+    } catch {
+        print("Ошибка кодирования JSON:", error)
+    }
+}
+
+//func savePonchiJSONToDocuments() {
+//    let encoder = JSONEncoder()
+//    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+//
+//    do {
+//        let data = try encoder.encode(MockPonchiData.all)
+//        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//            .appendingPathComponent("ponchi.json")
+//        try data.write(to: url)
+//        print("JSON сохранён:", url)
+//    } catch {
+//        print("Ошибка сохранения:", error)
+//    }
+//}
+
+#endif
