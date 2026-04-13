@@ -21,10 +21,14 @@ struct NutritionView: View {
     }
     
     var body: some View {
-        VStack(spacing: 5) {
+        VStack(spacing: 10) {
             Text(calories)
                 .font(.uncage(20))
                 .foregroundColor(.brightGreen)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color.peony.opacity(0.55))
+                .clipShape(Capsule())
             
             HStack(spacing: 20) {
                 ForEach(nutritionItems, id: \.title) { item in
@@ -39,12 +43,15 @@ struct NutritionView: View {
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(8)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 12)
+            .background(Color.cream.opacity(0.96))
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
             .overlay {
-                Capsule()
-                    .stroke(Color.peony, lineWidth: 2)
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .stroke(Color.softStroke, lineWidth: 1)
             }
-            .padding(5)
         }
+        .padding(.top, 4)
     }
 }

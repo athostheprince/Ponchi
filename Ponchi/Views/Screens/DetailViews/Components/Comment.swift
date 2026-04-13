@@ -11,7 +11,7 @@ struct Comment: View {
     var placeholder: String
     @Binding var text: String
     var keyboardType: UIKeyboardType = .default
-    var placeholderColor: Color = Color.gray.opacity(0.5)
+    var placeholderColor: Color = Color.brightGreen.opacity(0.45)
 
     var body: some View {
         HStack {
@@ -32,12 +32,12 @@ struct Comment: View {
             }
         }
         .padding()
-        .cornerRadius(30)
-        .overlay(
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(text.isEmpty ? Color.peony : Color.white, lineWidth: 2)
-        )
+        .background(Color.cream.opacity(0.96))
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .stroke(text.isEmpty ? Color.softStroke : Color.brightGreen.opacity(0.3), lineWidth: 1)
+        }
         .padding(.horizontal)
     }
 }
-

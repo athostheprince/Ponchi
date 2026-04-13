@@ -9,48 +9,48 @@ import Foundation
 import SwiftUI
 
 struct Ponchi: Identifiable, Codable, Equatable {
-    
     var productId: String
-    var id: String { generateID() }
-    
+    var id: String {
+        let toppings = selectedToppings.map(\.name).joined(separator: ",")
+        return "\(productId)-\(size?.rawValue ?? "")-\(toppings)"
+    }
+
+    // MARK: - Core
+
     var name: String
     var category: Category
     var basePrice: Int
     var image: String
-    
-    var displayImge: String {
-        if let tea = selectedTeaType {
-            return tea.imageName
-        }
-        return image
-    }
-    
     var images: [String]?
     var description: String
     var size: Size? = .medium
     var calories: String
     var weight: String?
     var quantity = 1
-    var cookingTime: Int {
-        switch category {
-        case .coffee: return 2
-        case .signatureDrincks: return 4
-        case .new: return 5
-        case .notCoffee: return 3
-        case .food: return 7
-        }
-    }
-
-    
     var nutrition: Nutrition?
-    
     var fixedSizes: [SizePicker]?
     var availableToppings: [Topping]?
-    
     var drinkTag: [DrinkTag]?
     var foodTag: [FoodTag]?
-    
-    // MARK: - Размер
+    var teaType: [TeaType]?
+    var selectedTeaType: TeaType?
+
+    enum CodingKeys: String, CodingKey {
+        case productId
+        case name, category, basePrice, image, images, description
+        case calories, weight, nutrition
+        case fixedSizes, availableToppings
+        case drinkTag, foodTag, teaType
+    }
+}
+
+// MARK: - Presentation
+
+extension Ponchi {
+    var displayImage: String {
+        selectedTeaType?.imageName ?? image
+    }
+
     var ml: String {
         switch size {
         case .small: return "200 мл"
@@ -63,49 +63,12 @@ struct Ponchi: Identifiable, Codable, Equatable {
     var hasMultipleSizes: Bool {
         size != .noSize && (fixedSizes?.count ?? 0) > 1
     }
-    
-    var currentSizePrice: Int {
-        guard let size = size else { return basePrice }
-        return fixedSizes?.first(where: { $0.volume == size })?.price ?? basePrice
-    }
-    
-    // MARK: - Топпинги
+
     var hasTopping: Bool {
         guard let available = availableToppings else { return false }
         return !available.isEmpty
     }
-    
-    var selectedToppings: [ToppingOption] {
-        availableToppings?.flatMap { $0.options.filter { $0.isSelected } } ?? []
-    }
-    
-    var milkPrice: Int {
-        guard let milkTopping = selectedToppings.first(
-            where: { topping in
-                availableToppings?.first { $0.category == .milk }?.options.contains(where: { $0.id == topping.id }) ?? false
-            }
-        ) else { return 0 }
-        return milkTopping.name != "коровье молоко" ? 50 : 0
-    }
-    
-    var syrupPrice: Int {
-        guard let syrupTopping = selectedToppings.first(
-            where: { topping in
-                availableToppings?.first { $0.category == .syrop }?.options.contains(where: { $0.id == topping.id }) ?? false
-            }
-        ) else { return 0 }
-        return syrupTopping.name != "без сиропа" ? 20 : 0
-    }
-    
-    var totalPrice: Int {
-        let toppingsPrice = milkPrice + syrupPrice
-        let price = currentSizePrice + toppingsPrice
-        return price * quantity
-    }
-    
-    var teaType: [TeaType]? 
-    var selectedTeaType: TeaType? 
-    
+
     var selectedToppingsDescription: String {
         let grouped = Dictionary(grouping: selectedToppings) { option in
             availableToppings?.first { $0.options.contains(where: { $0.id == option.id }) }?.category
@@ -115,36 +78,41 @@ struct Ponchi: Identifiable, Codable, Equatable {
             return "\(category?.rawValue ?? ""): \(topOption)"
         }.joined(separator: ", ")
     }
-    
-    enum CodingKeys: String, CodingKey {
-        case productId
-        case name, category, basePrice, image, images, description
-        case calories, weight, nutrition
-        case fixedSizes, availableToppings
-        case drinkTag, foodTag, teaType
+
+    var isDrink: Bool {
+        category != .food
     }
-    
-    // MARK: - Equatable
+
+    var isFood: Bool {
+        category == .food
+    }
+}
+
+// MARK: - Pricing
+
+extension Ponchi {
+    var currentSizePrice: Int {
+        guard let size else { return basePrice }
+        return fixedSizes?.first(where: { $0.volume == size })?.price ?? basePrice
+    }
+
+    var selectedToppings: [ToppingOption] {
+        availableToppings?.flatMap { $0.options.filter(\.isSelected) } ?? []
+    }
+
+    var totalPrice: Int {
+        let toppingsPrice = selectedToppings.reduce(0) { $0 + $1.price }
+        return (currentSizePrice + toppingsPrice) * quantity
+    }
+}
+
+// MARK: - Equatable
+
+extension Ponchi {
     static func == (lhs: Ponchi, rhs: Ponchi) -> Bool {
-        lhs.isEquivalent(to: rhs)
-    }
-    
-    func isEquivalent(to other: Ponchi) -> Bool {
-        return name == other.name &&
-               size == other.size &&
-               selectedToppings == other.selectedToppings
-    }
-    
-    // MARK: - Helpers
-    func generateID() -> String {
-        let toppingsString = selectedToppings.map { $0.name }.joined(separator: ",")
-        return "\(productId)-\(size?.rawValue ?? "")-\(toppingsString)"
-    }
-    
-    func withUpdatedToppings(_ toppings: [Topping]) -> Ponchi {
-        var updated = self
-        updated.availableToppings = toppings
-        return updated
+        lhs.name == rhs.name &&
+        lhs.size == rhs.size &&
+        lhs.selectedToppings == rhs.selectedToppings
     }
 }
 
@@ -225,18 +193,13 @@ enum TeaType: String, Codable, CaseIterable, Identifiable {
 }
 
 enum Category: String, Codable, CaseIterable, Identifiable {
-    
     var id: String { rawValue }
-    
+
     case new = "Новинки"
     case coffee = "Классика"
     case notCoffee = "Не кофе"
     case food = "Перекусить"
     case signatureDrincks = "Авторские напитки"
-    
-//    var items: [String] {
-//        MockPonchiData.all.filter { $0.category == self }.map { $0.name }
-//    }
 }
 
 struct ToppingStore {
@@ -831,36 +794,4 @@ struct MockPonchiData {
         foodTag: [.сладкая, .классика]
     )
     
-    static let all: [Ponchi] = [cappuccino, americano, espresso, latte, raf, flat, filter, bananaRaf, pampkinRaf, cheezeSanta, canadaRaf, nutsMokka, pinkMatcha, coconutMatcha, iceLatte, cacao, matchaLatte, lemonade, milkShake, teaInAssortment, sendwichWithHam, sendwichWithAvocado, vienneseWaffle, muesly, pancakes, syrniki, bamble, tonic]
 }
-
-#if DEBUG
-func exportPonchiJSON() {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-    
-    do {
-        let data = try encoder.encode(MockPonchiData.all)
-        _ = String(data: data, encoding: .utf8) ?? ""
-        //print(json)
-    } catch {
-        print("Ошибка кодирования JSON:", error)
-    }
-}
-
-//func savePonchiJSONToDocuments() {
-//    let encoder = JSONEncoder()
-//    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-//
-//    do {
-//        let data = try encoder.encode(MockPonchiData.all)
-//        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//            .appendingPathComponent("ponchi.json")
-//        try data.write(to: url)
-//        print("JSON сохранён:", url)
-//    } catch {
-//        print("Ошибка сохранения:", error)
-//    }
-//}
-
-#endif

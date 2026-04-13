@@ -46,7 +46,7 @@ struct PonchiMenuView: View {
                                     ponchiViewModel.isShownCups = false
                                 }
                             },
-                            color: .peony
+                            color: Color.peony
                         )
                         .padding()
                     }
@@ -98,5 +98,5 @@ struct PonchiMenuView: View {
     PonchiCustomTabBar()
         .environmentObject(Cart())
         .environmentObject(PreviewFactory.makePonchiViewModel())
-        .environmentObject(UserViewModel())
+        .environmentObject(PreviewFactory.makeUserViewModel())
 }

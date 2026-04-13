@@ -21,12 +21,11 @@ struct PonchiAddView: View {
     let arrayofFood: [Image] = []
 
     var body: some View {
-               
         VStack(alignment: .center) {
-                Text("попробуйте вместе:")
-                    .font(.caviarb(25))
-                    .foregroundStyle(Color.brightGreen)
-                    .padding(.horizontal, 20)
+            Text("попробуйте вместе:")
+                .font(.caviarb(25))
+                .foregroundStyle(Color.brightGreen)
+                .padding(.horizontal, 20)
             HStack {
                 ForEach(items.indices, id: \.self) { index in
                     let item = items[index]
@@ -42,8 +41,10 @@ struct PonchiAddView: View {
                                 MattePlusButton(
                                     size: 40,
                                     action: {
-                                    plusAction(item)
-                                }, pic: "plus")
+                                        plusAction(item)
+                                    },
+                                    pic: "plus"
+                                )
                                     .padding(3)
                             })
                         
@@ -66,42 +67,38 @@ struct PonchiAddView: View {
                         Color.clear
                             .frame(height: 10)
                     }
-                    
-                    .background(Color.biege)
-                    .cornerRadius(20)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 8)
+                    .background(Color.cream.opacity(0.95))
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.softStroke, lineWidth: 1)
+                    }
                 }
             }
-            
-           
-//            GlassButton(title: "ДОБАВИТЬ В КОРЗИНУ", action: {
-//                withAnimation {
-//                    ponchi.confirmAddOrder(for: cart)
-//                    ponchi.isAddShown = false
-//                   cartAction()
-//                }
-//            })
-                //.padding(5)
-                
-            
         }
         .padding()
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        
+        .background(Color.canvas.opacity(0.96))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(Color.softStroke, lineWidth: 1)
+        }
+        .shadow(color: Color.brightPeony.opacity(0.25), radius: 16, x: 0, y: 8)
         .overlay(alignment: .topTrailing) {
             MattePlusButton(
                 size: 45,
                 action: {
-                withAnimation {
-                    //ponchi.confirmAddOrder(for: cart)
-                    //ponchi.isAddShown = false
-                    closeAction()
-                }
-            }, pic: "xmark")
+                    withAnimation {
+                        closeAction()
+                    }
+                },
+                pic: "xmark"
+            )
                 .padding(3)
                 .scaleEffect(0.8)
         }
-        
     }
 }
 
@@ -195,5 +192,5 @@ struct PonchiAddContainer: View {
     PonchiCustomTabBar()
         .environmentObject(PreviewFactory.makePonchiViewModel())
         .environmentObject(Cart())
-        .environmentObject(UserViewModel())
+        .environmentObject(PreviewFactory.makeUserViewModel())
 }

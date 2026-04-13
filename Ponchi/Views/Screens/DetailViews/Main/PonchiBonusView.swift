@@ -91,7 +91,7 @@ struct PonchiBonusView: View {
 
 private struct PonchiBonusPreview: View {
     private let userVM: UserViewModel = {
-        let user = UserViewModel()
+        let user = PreviewFactory.makeUserViewModel()
         user.bonusPoints = 100
         return user
     }()

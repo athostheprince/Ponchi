@@ -16,6 +16,11 @@ struct TotalPriceButton: View {
             RoundedRectangle(cornerRadius: 30)
                 .frame(width: 200, height: 50)
                 .foregroundStyle(Color.brightGreen)
+                .shadow(color: Color.brightPeony.opacity(0.24), radius: 12, x: 0, y: 5)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(Color.peony.opacity(0.18), lineWidth: 1)
+                }
             HStack(spacing: 5) {
                 Text("₽")
                     .font(.title)

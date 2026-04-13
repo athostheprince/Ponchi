@@ -228,6 +228,6 @@ struct CupsView: View {
 
 #Preview {
     CupsView()
-        .environmentObject(UserViewModel())
+        .environmentObject(PreviewFactory.makeUserViewModel())
         .environmentObject(PreviewFactory.makePonchiViewModel())
 }

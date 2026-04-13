@@ -8,84 +8,58 @@
 import Foundation
 import SwiftUI
 
+final class PonchiViewModel: ObservableObject {
+    // MARK: - Menu State
 
-class PonchiViewModel: ObservableObject {
     @Published var ponchis: [Ponchi] = []
     @Published var isShowingDetails = false
     @Published var selectedTab = 0
-    @Published var selectedSegment = 0
-    @Published var columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-    @Published var categories: [Category] = Category.allCases
     @Published var selectedCategory: Category? {
         didSet {
             AppSettings.shared.lastSelectedCategory = selectedCategory
         }
     }
+    @Published var selectedIndex = 0
+    @Published var isShownCups = false
+
+    // MARK: - Product Detail State
+
+    @Published var sizes: [Size] = Size.allCases
+    @Published var selectedSize: Size? = .medium
+    @Published var availableToppings: [Topping]?
+    @Published var selectedPonchi: Ponchi? {
+        didSet {
+            syncSelectionState()
+        }
+    }
+    @Published var comment = ""
+    @Published var isAddShown = false
+
+    // MARK: - Cart State
+
+    @Published var animatedPrice: [Int] = []
+    @Published var editedItemIndex: Int?
+
+    // MARK: - Loading State
+
+    @Published var isLoading = false
+    @Published var showOfflineBanner = false
+    @Published var offlineBannerText = ""
+
+    private let loadMenuUseCase: LoadMenuUseCase
+    private let bannerHideDelay: UInt64 = 2_500_000_000
 
     init(loadMenuUseCase: LoadMenuUseCase) {
         self.loadMenuUseCase = loadMenuUseCase
         self.selectedCategory = AppSettings.shared.lastSelectedCategory
     }
+}
 
+// MARK: - Computed Properties
 
-    @Published var selectedIndex = 0
-    @Published var selectedSizeIndex = 1
-    //@Published var ponchi: Ponchi?
-    @Published var sizes: [Size] = Size.allCases
-    @Published var pickerOptions: [Size] = Size.allCases
-    @Published var selectedSize: Size? = .medium
-
-    @Published var animatedPrice: [Int] = []
-
-    @Published var availableToppings: [Topping]?
-    @Published var showCategories = false
-    @Published var selectedToppingCategory: ToppingCategory?
-    @Published var selectedOption: String?
-    @Published var isSelected = false
-
-    @Published var totalPrice: Int = 0
-    @Published var editedItemIndex: Int?
-
-    @Published var selectedPonchi: Ponchi? {
-        didSet {
-            if selectedPonchi != nil {
-                if let ponchi = selectedPonchi {
-                    availableToppings = ponchi.availableToppings
-                    selectedSize = ponchi.size ?? .medium
-                    calculateTotalPrice()
-                }
-            }
-        }
-    }
-
-    @Published var isShownCups = false
-    @Published var searchTerm = ""
-    @Published var isLiked = false
-
-    @Published var selectedToppings: [ToppingOption] = []
-
-    @Published var isPresented = true
-    @Published var comment = ""
-
-    @Published var isAddShown = false
-
-    @Published var selectedVariantIndex = 0
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    @Published var showOfflineBanner = false
-    @Published var offlineBannerText = ""
-    @Published var isUsingOfflineData = false
-
-    private let loadMenuUseCase: LoadMenuUseCase
-
-    private let bannerHideDelay: UInt64 = 2_500_000_000
-
+extension PonchiViewModel {
     var hasTeaType: Bool {
-        guard let selectedPonchi else { return false }
-        return selectedPonchi.selectedTeaType != nil
+        selectedPonchi?.selectedTeaType != nil
     }
 
     var hasMultipleSizes: Bool {
@@ -106,8 +80,65 @@ class PonchiViewModel: ObservableObject {
         )
     }
 
+    var availableSizes: [Size] {
+        if let selectedPonchi, let fixedSizes = selectedPonchi.fixedSizes {
+            return fixedSizes.map(\.volume)
+        }
+
+        return Size.allCases.filter { $0 != .noSize }
+    }
+
+    var upsellItems: [Ponchi] {
+        guard let selectedPonchi else { return [] }
+
+        let relatedItems = ponchis.filter { selectedPonchi.isDrink ? $0.isFood : $0.isDrink }
+        return Array(relatedItems.shuffled().prefix(3))
+    }
+
+    var newCategories: [Category] {
+        Category.allCases
+    }
+}
+
+// MARK: - Menu Actions
+
+extension PonchiViewModel {
+    func getProducts(for category: String) -> [Ponchi] {
+        ponchis.filter { $0.category.rawValue == category }
+    }
+
+    func selectedTab(_ index: Int) {
+        selectedTab = index
+    }
+
+    @MainActor
+    func loadPonchi() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let result = try await loadMenuUseCase.execute()
+            ponchis = result.items
+
+            if let message = result.message {
+                presentOfflineBanner(message)
+            } else {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    showOfflineBanner = false
+                }
+            }
+        } catch {
+            presentOfflineBanner("Сеть недоступна. Загружены резервные данные.")
+        }
+    }
+}
+
+// MARK: - Product Customization
+
+extension PonchiViewModel {
     func selectSize(_ size: Size) {
         guard var currentPonchi = selectedPonchi else { return }
+
         currentPonchi.size = size
         selectedPonchi = currentPonchi
         selectedSize = size
@@ -115,145 +146,32 @@ class PonchiViewModel: ObservableObject {
     }
 
     func toggleToppingSelection(for option: ToppingOption, in category: Topping) {
-        guard var availableToppings = availableToppings, var currentPonchi = selectedPonchi else { return }
+        guard var updatedToppings = availableToppings, var currentPonchi = selectedPonchi else { return }
+        guard let categoryIndex = updatedToppings.firstIndex(where: { $0.id == category.id }) else { return }
 
-        // Находим категорию
-        if let categoryIndex = availableToppings.firstIndex(where: { $0.id == category.id }) {
-            // Сбрасываем все выборы в этой категории
-            for i in 0..<availableToppings[categoryIndex].options.count {
-                availableToppings[categoryIndex].options[i].isSelected = false
-            }
-
-            // Выбираем новый вариант
-            if let optionIndex = availableToppings[categoryIndex].options.firstIndex(where: { $0.id == option.id }) {
-                availableToppings[categoryIndex].options[optionIndex].isSelected = true
-            }
-
-            // Обновляем пончи с новыми топпингами
-            currentPonchi.availableToppings = availableToppings
-            self.selectedPonchi = currentPonchi
-            self.availableToppings = availableToppings
-
-            // Немедленный пересчет цены
-            calculateTotalPrice()
+        for index in updatedToppings[categoryIndex].options.indices {
+            updatedToppings[categoryIndex].options[index].isSelected = false
         }
-    }
 
-
-    var ml: String {
-
-        switch selectedSize {
-        case .small:
-            return "200 мл"
-        case .medium:
-            return "300 мл"
-        case .large:
-            return "400 мл"
-        default: break
+        if let optionIndex = updatedToppings[categoryIndex].options.firstIndex(where: { $0.id == option.id }) {
+            updatedToppings[categoryIndex].options[optionIndex].isSelected = true
         }
-        return ""
+
+        currentPonchi.availableToppings = updatedToppings
+        selectedPonchi = currentPonchi
+        availableToppings = updatedToppings
+
+        calculateTotalPrice()
     }
+}
 
-    var filteredProducts: [Ponchi] {
-        guard !searchTerm.isEmpty else { return ponchis }
-        return ponchis.filter { $0.name.localizedCaseInsensitiveContains(searchTerm) }
-    }
+// MARK: - Cart Actions
 
-    var availableSizes: [Size] {
-        if let selectedPonchi = selectedPonchi, let fixedSizes = selectedPonchi.fixedSizes {
-            return fixedSizes.map { $0.volume }
-        }
-        return Size.allCases.filter { $0 != .noSize }
-    }
-
-    var upsellItems: [Ponchi] {
-        guard let selected = selectedPonchi else { return [] }
-
-        if selected.isDrink {
-            return ponchis
-                .filter { $0.isFood }
-                .shuffled()
-                .prefix(3)
-                .map { $0 }
-        } else {
-            return ponchis
-                .filter { $0.isDrink }
-                .shuffled()
-                .prefix(3)
-                .map { $0 }
-        }
-    }
-
-    func calculateTotalPrice() {
-        guard let currentPonchi = selectedPonchi else { return }
-
-        // Цена размера
-        let sizePrice = currentPonchi.fixedSizes?.first { $0.volume == currentPonchi.size }?.price ?? currentPonchi.basePrice
-
-        // Цена топпингов
-        let toppingsPrice = currentPonchi.selectedToppings.reduce(0) { $0 + $1.price }
-
-        // Итоговая цена с учетом количества
-        let total = (sizePrice + toppingsPrice) * currentPonchi.quantity
-
-        // Обновление с анимацией
-        DispatchQueue.main.async {
-            withAnimation {
-                self.totalPrice = total
-                self.animatePriceChange(to: total)
-            }
-        }
-    }
-
-
-    var newCategories: [Category] {
-        return Category.allCases
-    }
-
-
-    func selectCategory(_ category: Category) {
-        selectedCategory = category
-    }
-
-    func categoryVisible(_ category: Category) {
-        if selectedCategory != category {
-            selectedCategory = category
-        }
-    }
-
-    func updateVisibleCategory(values: [Category: CGFloat]) {
-        if let visibleCategory = values.min(by: { $0.value < $1.value })?.key {
-            selectedCategory = visibleCategory
-        }
-    }
-
-
-    func getProducts(for category: String) -> [Ponchi] {
-        ponchis.filter {
-            $0.category.rawValue == category
-        }
-    }
-
-    func selectedTab(_ index: Int) {
-        selectedTab = index
-    }
-
-    func selectSegment(index: Int) {
-        selectedSegment = index
-    }
-
-    func getCategory() -> [String] {
-        Array(Set(ponchis.map { $0.category.rawValue })).sorted()
-    }
-
-
-    func getDigits(from number: Int) -> [Int] {
-        return String(number).compactMap { $0.wholeNumberValue }
-    }
-
+extension PonchiViewModel {
     func animatePriceChange(to newValue: Int) {
         let newDigits = getDigits(from: newValue)
         let oldDigits = animatedPrice
+
         animatedPrice = oldDigits.enumerated().map { index, _ in
             index < newDigits.count ? newDigits[index] : 0
         }
@@ -265,81 +183,69 @@ class PonchiViewModel: ObservableObject {
         }
     }
 
-    func isOptionSelected(for category: Topping) -> Bool {
-        guard let availableToppings = availableToppings else { return false }
-        if let category = availableToppings.first(where: { $0.category == category.category }) {
-            return category.options.contains(where: { $0.isSelected })
+    func confirmAddOrder(for cart: Cart) {
+        if editedItemIndex != nil {
+            saveChanges(to: cart)
+        } else {
+            addNewItem(to: cart)
         }
-        return false
+    }
+}
+
+// MARK: - Private Helpers
+
+private extension PonchiViewModel {
+    func syncSelectionState() {
+        guard let selectedPonchi else { return }
+
+        availableToppings = selectedPonchi.availableToppings
+        selectedSize = selectedPonchi.size ?? .medium
+        calculateTotalPrice()
     }
 
-    func addToOrder(order: Cart) {
-        if let selectedPonchi {
-            order.addItem(selectedPonchi)
+    func calculateTotalPrice() {
+        guard let currentPonchi = selectedPonchi else { return }
+
+        DispatchQueue.main.async {
+            withAnimation {
+                self.animatePriceChange(to: currentPonchi.totalPrice)
+            }
         }
+    }
+
+    func getDigits(from number: Int) -> [Int] {
+        String(number).compactMap(\.wholeNumberValue)
+    }
+
+    func addToOrder(_ cart: Cart) {
+        guard let selectedPonchi else { return }
+        cart.addItem(selectedPonchi)
     }
 
     func saveChanges(to cart: Cart) {
         guard let index = editedItemIndex,
               let updated = selectedPonchi,
               cart.items.indices.contains(index) else {
-
-            if let updated = selectedPonchi {
-                cart.addItem(updated)
-            }
+            addToOrder(cart)
             editedItemIndex = nil
-
-            //isShowingDetails = false
             return
         }
 
         cart.items[index] = updated
         editedItemIndex = nil
-        //isShowingDetails = false
-    }
-
-    func confirmAddOrder(for cart: Cart) {
-        if let _ = editedItemIndex {
-            saveChanges(to: cart)
-        } else {
-            addNewItem(to: cart)
-        }
     }
 
     func addNewItem(to cart: Cart) {
         guard var ponchi = selectedPonchi else { return }
+
         ponchi.quantity = 1
         cart.addItem(ponchi)
-
-        //isShowingDetails = false
     }
 
     @MainActor
-    func loadPonchi() async {
-        isLoading = true
-        errorMessage = nil
-        defer { isLoading = false }
-
-        do {
-            let result = try await loadMenuUseCase.execute()
-            ponchis = result.items
-            isUsingOfflineData = (result.source == .local)
-
-            if let msg = result.message {
-                presentOfflineBanner(msg)
-            } else {
-                showOfflineBanner = false
-            }
-        } catch {
-            errorMessage = "Не удалось загрузить меню"
-            presentOfflineBanner("Сеть недоступна. Загружены резервные данные.")
-        }
-    }
-
-
-    @MainActor
-    private func presentOfflineBanner(_ message: String) {
+    func presentOfflineBanner(_ message: String) {
         offlineBannerText = message
+
         withAnimation(.easeInOut(duration: 0.25)) {
             showOfflineBanner = true
         }
@@ -352,31 +258,5 @@ class PonchiViewModel: ObservableObject {
                 }
             }
         }
-    }
-
-    private func networkFallbackBanner(for error: Error) -> String {
-        guard let urlError = error as? URLError else {
-            return "Не удалось обновить меню из сети. Показано локальное меню."
-        }
-
-        switch urlError.code {
-        case .notConnectedToInternet:
-            return "Вы офлайн. Показано локальное меню."
-        case .networkConnectionLost, .timedOut, .cannotFindHost, .cannotConnectToHost, .dnsLookupFailed:
-            return "Проблема с сетью. Показано локальное меню."
-        default:
-            return "Не удалось обновить меню из сети. Показано локальное меню."
-        }
-    }
-
-}
-
-extension Ponchi {
-    var isDrink: Bool {
-        category != .food
-    }
-
-    var isFood: Bool {
-        category == .food
     }
 }

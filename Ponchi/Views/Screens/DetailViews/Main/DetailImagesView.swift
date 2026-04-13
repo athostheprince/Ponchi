@@ -32,7 +32,7 @@ struct DetailImagesView: View {
                 )
                 .overlay(
                     LinearGradient(
-                        colors: [.clear, Color.biege],
+                        colors: [.clear, Color.canvas],
                         startPoint: .bottom,
                         endPoint: .top
                     )
@@ -50,4 +50,3 @@ struct DetailImagesView: View {
         }
     }
 }
-
