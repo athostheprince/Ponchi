@@ -76,6 +76,6 @@ struct SplashView: View {
     SplashView()
         .environmentObject(PreviewFactory.makePonchiViewModel())
         .environmentObject(Cart())
-        .environmentObject(UserViewModel())
+        .environmentObject(PreviewFactory.makeUserViewModel())
         .environmentObject(OrderViewModel())
 }

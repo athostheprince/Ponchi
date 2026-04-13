@@ -94,7 +94,7 @@ struct PonchiCustomTabBar: View {
 private struct PonchiCustomTabBarPreview: View {
     @StateObject private var ponchiViewModel = PreviewFactory.makePonchiViewModel()
     private let cart = Cart()
-    private let user = UserViewModel()
+    private let user = PreviewFactory.makeUserViewModel()
     private let order = OrderViewModel()
 
     var body: some View {
@@ -111,17 +111,4 @@ private struct PonchiCustomTabBarPreview: View {
 
 #Preview {
     PonchiCustomTabBarPreview()
-}
-
-extension Color {
-    static let peony: Color = Color(hex: "1ffd7df")
-    static let brightGreen = Color(hex: "1a5632")
-    static let brightPeony = Color(hex: "DF8992")
-    static let matcha = Color(hex: "C3C282")
-    static let biege = Color(hex: "E8E2D4")
-    static let bronzeYellow = Color(hex: "576100")
-    static let softPink = Color(hex: "F7EFDA")
-    static let lightWihte = Color(hex: "E8E2D4")
-    static let bronzeGreen = Color(hex: "CCC9A4")
-    static let paleSilver = Color(hex: "d5c8b5")
 }

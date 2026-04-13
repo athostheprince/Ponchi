@@ -24,12 +24,28 @@ struct PonchiDrinkDetailView: View {
     @Namespace var upsellNamespace
     
     @State private var currentImageIndex: Int = 0
+    
+    private var detailSheetBackground: some View {
+        Color.canvas
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .fill(Color.peony.opacity(0.28))
+                    .frame(width: 140, height: 140)
+                    .offset(x: 24, y: -28)
+            }
+            .overlay(alignment: .bottomLeading) {
+                Circle()
+                    .fill(Color.cream.opacity(0.96))
+                    .frame(width: 180, height: 180)
+                    .offset(x: -48, y: 52)
+            }
+    }
 
     
     var body: some View {
         ZStack {
             
-            Color.biege
+            Color.canvas
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 VStack(spacing: 0) {
@@ -45,13 +61,14 @@ struct PonchiDrinkDetailView: View {
                                 }
                                 .tabViewStyle(.page(indexDisplayMode: .never))
                             } else {
-                                DetailImageView(image: ponchi.displayImge)
+                                DetailImageView(image: ponchi.displayImage)
                             }
                             
                             if ponchi.hasMultipleSizes {
                                 CustomSegmentPicker(
                                     categories: ponchiViewModel.sizes
                                 )
+                                .padding(.top, 12)
                             }
                         }
                         
@@ -70,27 +87,36 @@ struct PonchiDrinkDetailView: View {
                                 HStack {
                                     Text(ponchi.ml)
                                         .font(.caviarb(20))
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Color.brightGreen.opacity(0.75))
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(Color.cream.opacity(0.96))
+                                        .clipShape(Capsule())
                                     
                                     Spacer()
                                     
-                                    HStack {
-                                        Text("состав")
-                                            .font(.caviarb(20))
-                                        
-                                        Image(systemName: showDetails ? "chevron.down" : "chevron.right")
-                                    }
-                                    .padding(5)
-                                    .foregroundStyle(showDetails ? Color.brightGreen : Color.gray)
-                                    .overlay{
-                                        Capsule()
-                                            .stroke(Color.secondary, lineWidth: 1)
-                                    }
-                                    .onTapGesture {
+                                    Button {
                                         withAnimation {
                                             showDetails.toggle()
                                         }
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            Text("состав")
+                                                .font(.caviarb(20))
+                                            
+                                            Image(systemName: showDetails ? "chevron.down" : "chevron.right")
+                                        }
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .foregroundStyle(showDetails ? Color.peony : Color.brightGreen)
+                                        .background(showDetails ? Color.brightGreen : Color.cream.opacity(0.96))
+                                        .clipShape(Capsule())
+                                        .overlay {
+                                            Capsule()
+                                                .stroke(Color.softStroke, lineWidth: 1)
+                                        }
                                     }
+                                    .buttonStyle(.plain)
                                 }
                                 .padding(.horizontal, 2)
                                 .padding(.vertical, 10)
@@ -129,9 +155,11 @@ struct PonchiDrinkDetailView: View {
                                     PonchiToppingsView()
                                         .environmentObject(ponchiViewModel)
                                         .padding()
+                                        .background(Color.cream.opacity(0.96))
+                                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                                         .overlay {
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .stroke(Color.peony, lineWidth: 2)
+                                            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                                .stroke(Color.softStroke, lineWidth: 1)
                                         }
                                         .padding(.horizontal)
                                 }
@@ -167,9 +195,13 @@ struct PonchiDrinkDetailView: View {
                 }
                 .showDragIndicator(false)
                 .customBackground(
-                    Color.softPink
+                    detailSheetBackground
                         .cornerRadius(30)
-                        .shadow(color: .white, radius: 10, x: 0, y: 0)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                                .stroke(Color.softStroke, lineWidth: 1)
+                        }
+                        .shadow(color: Color.brightPeony.opacity(0.28), radius: 18, x: 0, y: -6)
                 )
                 .bottomSheetSnap(position: $bottomSheetPosition, collapsed: .relative(0.53), expanded: .relativeTop(0.9))
             }
@@ -239,5 +271,5 @@ struct PonchiDrinkDetailView: View {
     PonchiCustomTabBar()
         .environmentObject(PreviewFactory.makePonchiViewModel())
         .environmentObject(Cart())
-        .environmentObject(UserViewModel())
+        .environmentObject(PreviewFactory.makeUserViewModel())
 }

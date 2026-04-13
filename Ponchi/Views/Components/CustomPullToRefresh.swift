@@ -27,7 +27,9 @@ struct CustomPullToRefresh<Content: View>: View {
         self.content = content()
     }
     
+    
     var body: some View {
+        
         ScrollView {
             GeometryReader { geo in
                 Color.clear
@@ -36,21 +38,36 @@ struct CustomPullToRefresh<Content: View>: View {
             .frame(height: 0)
 
             let isActive = pullOffset > 0 || isRefreshing
+            let progress = min(max(pullOffset / 80, 0), 1)
             let height = isActive ? min(pullOffset, 80) : 0
 
             VStack {
-                Image("coffeeToGo")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 32, height: 32)
-                    .foregroundStyle(Color.brightGreen)
-                    .rotationEffect(.degrees(isRefreshing ? 360 : pullOffset * 3))
-                    .opacity(isActive ? 1 : 0)
-                    .scaleEffect(isActive ? 1 : 0.85)
-                    .animation(.easeOut(duration: 0.2), value: pullOffset)
+                ZStack {
+                    Circle()
+                        .stroke(Color.brightGreen.opacity(0.16), lineWidth: 2)
+
+                    Circle()
+                        .trim(from: 0.18, to: isRefreshing ? 0.82 : 0.18 + 0.64 * progress)
+                        .stroke(
+                            Color.brightGreen,
+                            style: StrokeStyle(lineWidth: 2.5, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(isRefreshing ? 360 : Double(progress) * 220))
+                        .animation(
+                            isRefreshing
+                                ? .linear(duration: 0.85).repeatForever(autoreverses: false)
+                                : .easeOut(duration: 0.2),
+                            value: isRefreshing
+                        )
+                        .animation(.easeOut(duration: 0.2), value: progress)
+                }
+                .frame(width: 28, height: 28)
+                .opacity(isActive ? 1 : 0)
+                .scaleEffect(0.9 + 0.1 * progress)
             }
+            .frame(maxWidth: .infinity)
             .frame(height: height)
+
 
             content
         }

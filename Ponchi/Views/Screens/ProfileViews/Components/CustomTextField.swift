@@ -12,17 +12,24 @@ struct CustomTextField: View {
     @Binding var text: String
     var isSecure: Bool = false
     var keyboardType: UIKeyboardType = .default
-    var placeholderColor: Color = Color.gray // 🔥 Цвет плейсхолдера
+    var placeholderColor: Color = Color.gray
+    var prefix: String? = nil
+    var textContentType: UITextContentType? = nil
 
     var body: some View {
         HStack {
             Image(systemName: icon)
                 .foregroundColor(Color.brightGreen)
+            
+            if let prefix {
+                Text(prefix)
+                    .foregroundColor(Color.brightGreen)
+            }
 
             ZStack(alignment: .leading) {
                 if text.isEmpty {
                     Text(placeholder)
-                        .foregroundColor(placeholderColor) // 🔥 Кастомный цвет
+                        .foregroundColor(placeholderColor)
                         .padding(.leading, 4)
                 }
 
@@ -30,11 +37,13 @@ struct CustomTextField: View {
                     SecureField("", text: $text)
                         .foregroundColor(Color.brightGreen)
                         .textFieldStyle(PlainTextFieldStyle())
+                        .textContentType(textContentType)
                 } else {
                     TextField("", text: $text)
                         .foregroundColor(Color.brightGreen)
                         .textFieldStyle(PlainTextFieldStyle())
                         .keyboardType(keyboardType)
+                        .textContentType(textContentType)
                 }
             }
         }
@@ -49,3 +58,4 @@ struct CustomTextField: View {
         .padding(.horizontal)
     }
 }
+
