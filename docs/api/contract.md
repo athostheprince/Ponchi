@@ -3,7 +3,7 @@
 Документ описывает минимальный контракт между iOS‑клиентом и бэкендом.
 Цель — зафиксировать, какие запросы есть, какие поля ожидаются и какие ответы возвращаются.
 
-Base URL: `https://api.ponchi.app`
+Base URL: `https://api.ponchi.app` (dev: URL API Gateway)
 Version: `/v1`
 
 ## Общие правила
@@ -20,7 +20,8 @@ Version: `/v1`
 Запрос:
 ```json
 {
-  "phone": "+79990001122"
+  "phone": "+79990001122",
+  "purpose": "signup"
 }
 ```
 
@@ -34,9 +35,10 @@ Version: `/v1`
 
 Ошибки:
 - `400 INVALID_PHONE`
+- `400 INVALID_PURPOSE`
 - `429 TOO_MANY_REQUESTS`
 
-### 1.2 Подтвердить код и создать/войти
+### 1.2 Подтвердить код и создать аккаунт
 `POST /v1/auth/verify_code`
 
 Запрос:
@@ -44,6 +46,7 @@ Version: `/v1`
 {
   "phone": "+79990001122",
   "code": "1234",
+  "name": "Мария",
   "password": "secret123"
 }
 ```
@@ -55,6 +58,9 @@ Version: `/v1`
   "user": {
     "id": "uuid",
     "phone": "+79990001122",
+    "name": "Мария",
+    "bonuses": 0,
+    "avatar": null,
     "created_at": "2026-03-12T12:00:00Z"
   }
 }
@@ -64,8 +70,39 @@ Version: `/v1`
 - `400 INVALID_CODE`
 - `400 CODE_EXPIRED`
 - `400 WEAK_PASSWORD`
+- `409 USER_ALREADY_EXISTS`
 
-### 1.3 Сброс пароля через SMS
+### 1.3 Вход по паролю
+`POST /v1/auth/login`
+
+Запрос:
+```json
+{
+  "phone": "+79990001122",
+  "password": "secret123"
+}
+```
+
+Ответ:
+```json
+{
+  "access_token": "token",
+  "user": {
+    "id": "uuid",
+    "phone": "+79990001122",
+    "name": "Мария",
+    "bonuses": 0,
+    "avatar": null,
+    "created_at": "2026-03-12T12:00:00Z"
+  }
+}
+```
+
+Ошибки:
+- `400 INVALID_PHONE`
+- `401 INVALID_CREDENTIALS`
+
+### 1.4 Сброс пароля через SMS
 `POST /v1/auth/reset_password`
 
 Запрос:
@@ -85,8 +122,10 @@ Version: `/v1`
 ```
 
 Ошибки:
+- `400 INVALID_PHONE`
 - `400 INVALID_CODE`
 - `400 CODE_EXPIRED`
+- `400 WEAK_PASSWORD`
 
 ## 2) Menu
 
@@ -179,9 +218,15 @@ Headers:
 {
   "id": "uuid",
   "phone": "+79990001122",
-  "bonus_points": 120
+  "name": "Мария",
+  "bonuses": 120,
+  "avatar": null,
+  "created_at": "2026-03-12T12:00:00Z"
 }
 ```
+
+Ошибки:
+- `401 INVALID_TOKEN`
 
 ## 5) Admin (после релиза)
 

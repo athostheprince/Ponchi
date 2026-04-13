@@ -11,7 +11,7 @@ final class MenuRemoteDataSource {
     private let menuURL: URL
     private let network: NetworkService
 
-    init(menuURL: URL, network: NetworkService = .shared) {
+    init(menuURL: URL, network: NetworkService) {
         self.menuURL = menuURL
         self.network = network
     }

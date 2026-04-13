@@ -13,10 +13,14 @@ import YandexMapsMobile
 
 @main
 struct PonchiApp: App {
+    
+    private static let authBaseURL = AppConfig.apiBaseURL
+    let url = AppConfig.menuURL
+    
     let ponchiViewModel: PonchiViewModel
     var cart = Cart()
     var order = OrderViewModel()
-    var user = UserViewModel()
+    @StateObject private var user: UserViewModel
 
     @State private var showLaunchScreen = true
 
@@ -26,18 +30,39 @@ struct PonchiApp: App {
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" ||
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PLAYGROUNDS"] == "1"
     }
+    
+//    private static let authBaseURL = URL(
+//        string: "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1"
+//    )!
 
-    private static func makeMenuUseCase() -> LoadMenuUseCase {
+    private static func makeNetworkService() -> NetworkService {
+        NetworkService()
+    }
+
+    private static func makeMenuUseCase(network: NetworkService) -> LoadMenuUseCase {
         let url = URL(string: "https://storage.yandexcloud.net/ponchibucket/Ponchi.json")!
-        let remote = MenuRemoteDataSource(menuURL: url)
+        let remote = MenuRemoteDataSource(menuURL: url, network: network)
         let local = MenuLocalDataSource()
         let repo = DefaultMenuRepository(remote: remote, local: local)
 
         return LoadMenuUseCase(repo: repo)
     }
 
+    private static func makeUserViewModel(network: NetworkService) -> UserViewModel {
+        let authService = AuthService(network: network, baseURL: authBaseURL)
+        let keychain = KeychainService()
+        let sessionManager = SessionManager(keychain: keychain)
+
+        return UserViewModel(
+            authService: authService,
+            sessionManager: sessionManager
+        )
+    }
+
     init() {
-        self.ponchiViewModel = PonchiViewModel(loadMenuUseCase: Self.makeMenuUseCase())
+        let network = Self.makeNetworkService()
+        self.ponchiViewModel = PonchiViewModel(loadMenuUseCase: Self.makeMenuUseCase(network: network))
+        _user = StateObject(wrappedValue: Self.makeUserViewModel(network: network))
         if !isRunningPreviews {
             UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light)
         }
@@ -76,6 +101,9 @@ struct PonchiApp: App {
                 }
                 .onAppear {
                     Task { await ponchiViewModel.loadPonchi() }
+                }
+                .onAppear {
+                    Task { await user.restoreSession() }
                 }
             }
 

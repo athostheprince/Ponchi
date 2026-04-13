@@ -7,36 +7,38 @@
 
 import Foundation
 import SwiftUI
-import Security
 
+enum SessionManagerError: Error {
+    case faildToSAveToken
+}
+
+@MainActor
 final class SessionManager: ObservableObject {
-    static let shared = SessionManager()
-    
-    @Published var isLoggedIn = false
-    private var sessionKey = "userSessionID"
-    
-    private init() {
-        checkSession()
+    @Published private(set) var isLoggedIn = false
+    private(set) var token: String?
+
+    private let keychain: KeychainService
+    private let tokenKey: String
+
+    init(
+        keychain: KeychainService,
+        tokenKey: String = KeychainKey.authToken
+    ) {
+        self.keychain = keychain
+        self.tokenKey = tokenKey
+        self.token = keychain.read(tokenKey)
+        self.isLoggedIn = token != nil
     }
-    
-    func checkSession() {
-        if let existingToken = KeychainService.shared.read(sessionKey) {
-            print("сессия уже есть \(existingToken)")
-            isLoggedIn = true
-        } else {
-            let newToken = UUID().uuidString
-            let success = KeychainService.shared.save(newToken, for: sessionKey)
-            if success {
-                print("создана новая сессия \(newToken)")
-            } else {
-                print("токен не удалось сохранить")
-            }
-            isLoggedIn = true
-        }
-        
-        func logout() {
-            KeychainService.shared.delete(sessionKey)
-            isLoggedIn = false
-        }
+
+    func save(token: String) throws {
+        guard keychain.save(token, for: tokenKey) else { throw SessionManagerError.faildToSAveToken }
+        self.token = token
+        self.isLoggedIn = true
+    }
+
+    func clear() {
+        keychain.delete(tokenKey)
+        token = nil
+        isLoggedIn = false
     }
 }

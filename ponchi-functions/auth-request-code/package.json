@@ -1,0 +1,6 @@
+{
+  "name": "auth-request-code",
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}

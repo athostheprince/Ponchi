@@ -13,31 +13,27 @@ struct LoginForm: View {
 
     var body: some View {
         VStack {
-            CustomTextField(icon: "person", placeholder: "Имя", text: $user.signUpName)
-            CustomTextField(icon: "phone", placeholder: "Телефон", text: $user.signUpPhone, keyboardType: .phonePad)
+            CustomTextField(icon: "phone",
+                            placeholder: "(999) 000-00-00",
+                            text: Binding(get: {
+                PhoneNumberFormatter.display(from: user.authPhone)
+            }, set: { newValue in
+                user.authPhone = PhoneNumberFormatter.nationalDigits(from: newValue)
+            }),
+                            keyboardType: .phonePad,
+                            prefix: "+7"
+            )
             CustomTextField(icon: "lock", placeholder: "Пароль", text: $user.password, isSecure: true)
 
             GlassButton(title: "Войти") {
-                if user.isLoginFormValid {
-                    // создаём текущего пользователя (локально)
-                    user.user = User(
-                        id: Int.random(in: 1...1000),
-                        name: user.signUpName,
-                        number: user.signUpPhone,
-                        bonuses: Int(user.bonusPoints)
-                    )
-                    user.showProfile = false
-                    user.signUpName = ""
-                    user.signUpPhone = ""
-                    user.password = ""
-                } else {
-                    print("Форма входа заполнена некорректно")
+                Task {
+                    await user.login()
                 }
-                if user.user != nil {
-                    HapticManager.success()
-                } else {
-                    HapticManager.error()
-                }
+            }
+            
+            if let error = user.authErrorMessage {
+                Text(error)
+                    .foregroundStyle(Color.red)
             }
         }
         .padding()
