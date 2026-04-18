@@ -69,7 +69,7 @@ struct PonchiRegistrationView: View {
                         }
                     } label: {
                         Text("РЕГИСТРАЦИЯ")
-                            .font(.custom("Kica-PERSONALUSE-Light", size: 25))
+                            .font(.lepca(30))
                             .bold()
                             .foregroundStyle(selectedTab == .signup ? Color.brightGreen : .gray)
                             .scaleEffect(selectedTab == .signup ? 1.2 : 1)
@@ -85,7 +85,7 @@ struct PonchiRegistrationView: View {
                         }
                     } label: {
                         Text("ВОЙТИ")
-                            .font(.custom("Kica-PERSONALUSE-Light", size: 25))
+                            .font(.lepca(30))
                             .bold()
                             .foregroundStyle(selectedTab == .login ? Color.brightGreen : .gray)
                             .scaleEffect(selectedTab == .login ? 1.2 : 1)
@@ -121,7 +121,12 @@ struct PonchiRegistrationView: View {
                 ConfirmCodeView()
                     .environmentObject(user)
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                UIApplication.shared.dismissKeyboard()
+            }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

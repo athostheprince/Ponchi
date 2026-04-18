@@ -15,6 +15,27 @@ struct CustomTextField: View {
     var placeholderColor: Color = Color.gray
     var prefix: String? = nil
     var textContentType: UITextContentType? = nil
+    var submitLabel: SubmitLabel = .done
+    var onSubmit: (() -> Void)? = nil
+    var isFocused: FocusState<Bool>.Binding? = nil
+
+    @ViewBuilder
+    private func configuredInput<Content: View>(_ content: Content) -> some View {
+        if let isFocused {
+            content
+                .focused(isFocused)
+                .submitLabel(submitLabel)
+                .onSubmit {
+                    onSubmit?()
+                }
+        } else {
+            content
+                .submitLabel(submitLabel)
+                .onSubmit {
+                    onSubmit?()
+                }
+        }
+    }
 
     var body: some View {
         HStack {
@@ -34,16 +55,20 @@ struct CustomTextField: View {
                 }
 
                 if isSecure {
-                    SecureField("", text: $text)
-                        .foregroundColor(Color.brightGreen)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .textContentType(textContentType)
+                    configuredInput(
+                        SecureField("", text: $text)
+                            .foregroundColor(Color.brightGreen)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .textContentType(textContentType)
+                    )
                 } else {
-                    TextField("", text: $text)
-                        .foregroundColor(Color.brightGreen)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .keyboardType(keyboardType)
-                        .textContentType(textContentType)
+                    configuredInput(
+                        TextField("", text: $text)
+                            .foregroundColor(Color.brightGreen)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .keyboardType(keyboardType)
+                            .textContentType(textContentType)
+                    )
                 }
             }
         }
@@ -58,4 +83,3 @@ struct CustomTextField: View {
         .padding(.horizontal)
     }
 }
-

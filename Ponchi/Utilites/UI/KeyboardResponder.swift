@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import UIKit
 
 final class KeyboardResponder: ObservableObject {
     @Published var currentHeight: CGFloat = 0
@@ -24,5 +25,16 @@ final class KeyboardResponder: ObservableObject {
         Publishers.Merge(willShow, willHide)
             .assign(to: \.currentHeight, on: self)
             .store(in: &cancellables)
+    }
+}
+
+extension UIApplication {
+    func dismissKeyboard() {
+        sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
     }
 }
