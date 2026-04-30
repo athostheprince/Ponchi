@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct LaunchScreenView: View {
     var body: some View {
         ZStack {

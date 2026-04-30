@@ -12,7 +12,6 @@ struct ConfirmCodeView: View {
     @FocusState private var isCodeFieldFocused: Bool
 
     private let codeLength = 4
-    @State private var resendIn = 30
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
@@ -36,7 +35,7 @@ struct ConfirmCodeView: View {
 
             Spacer(minLength: 20)
 
-            Text("Введи код из SMS")
+            Text(titleText)
                 .font(.caviarb(28))
                 .foregroundStyle(Color.primaryText)
 
@@ -72,15 +71,15 @@ struct ConfirmCodeView: View {
                 .multilineTextAlignment(.center)
                 .monospacedDigit()
 
-            if resendIn == 0 {
+            if user.retryAfter == 0 {
                 Button("Отправить код ещё раз") {
+                    guard !user.isAuthLoading else { return }
                     Task {
-                        await user.requestSignUpCode()
-                        resendIn = 30
+                        await user.resendCode()
                         isCodeFieldFocused = true
                     }
                 }
-                .font(.caviarb(16))
+                .font(.caviarb(20))
                 .foregroundStyle(Color.brightGreen)
             }
 
@@ -90,13 +89,14 @@ struct ConfirmCodeView: View {
                     .foregroundStyle(.red)
             }
 
-            GlassButton(title: "Подтвердить") {
+            GlassButton(title: user.isAuthLoading ? loadingButtonTitle : confirmButtonTitle) {
+                guard !user.isAuthLoading else { return }
                 Task {
-                    await user.verifySignUpCode()
+                    await user.confirmCode()
                 }
             }
-            .disabled(user.smsCode.count != codeLength)
-            .opacity(user.smsCode.count == codeLength ? 1 : 0.6)
+            .disabled(user.smsCode.count != codeLength || user.isAuthLoading)
+            .opacity((user.smsCode.count == codeLength && !user.isAuthLoading) ? 1 : 0.6)
 
             Spacer()
 
@@ -115,12 +115,39 @@ struct ConfirmCodeView: View {
         .background(Color.canvas.ignoresSafeArea())
         .onAppear { isCodeFieldFocused = true }
         .onReceive(timer) { _ in
-            if resendIn > 0 { resendIn -= 1 }
+            user.tickResendTimer()
         }
     }
 
     private var timeString: String {
-        String(format: "%02d:%02d", resendIn / 60, resendIn % 60)
+        String(format: "%02d:%02d", user.retryAfter / 60, user.retryAfter % 60)
+    }
+
+    private var titleText: String {
+        switch user.authFlow {
+        case .signUp:
+            return "Введи код из SMS"
+        case .resetPassword:
+            return "Подтверди сброс пароля"
+        }
+    }
+
+    private var confirmButtonTitle: String {
+        switch user.authFlow {
+        case .signUp:
+            return "Подтвердить"
+        case .resetPassword:
+            return "Сменить пароль"
+        }
+    }
+
+    private var loadingButtonTitle: String {
+        switch user.authFlow {
+        case .signUp:
+            return "Проверяем..."
+        case .resetPassword:
+            return "Сохраняем..."
+        }
     }
 
     private func character(at index: Int) -> Character? {

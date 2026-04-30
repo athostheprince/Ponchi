@@ -41,13 +41,25 @@ struct LoginForm: View {
                 isFocused: $isPasswordFocused
             )
 
-            GlassButton(title: "Войти") {
+            GlassButton(title: user.isAuthLoading ? "Входим..." : "Войти") {
+                guard !user.isAuthLoading else { return }
                 dismissKeyboard()
                 Task {
                     await user.login()
                 }
             }
-            
+            .disabled(!user.isLoginFormValid || user.isAuthLoading)
+            .opacity((!user.isLoginFormValid || user.isAuthLoading) ? 0.6 : 1)
+
+            Button("Забыли пароль?") {
+                user.authErrorMessage = nil
+                user.newPassword = ""
+                user.confirmNewPassword = ""
+                user.showResetPasswordSheet = true
+            }
+            .font(.caviar(15))
+            .foregroundStyle(Color.brightGreen)
+
             if let error = user.authErrorMessage {
                 Text(error)
                     .foregroundStyle(Color.red)

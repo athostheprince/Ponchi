@@ -72,15 +72,15 @@ struct SignUpForm: View {
                     .foregroundColor(.red)
             }
             
-            GlassButton(title: "Подвердить код") {
+            GlassButton(title: user.isAuthLoading ? "Отправляем..." : "Получить код") {
+                guard !user.isAuthLoading else { return }
                 dismissKeyboard()
                 Task {
-                    
                     await user.requestSignUpCode()
                 }
             }
-            .disabled(!user.isSignUpFormValid)
-            .opacity(user.isSignUpFormValid ? 1 : 0.6)
+            .disabled(!user.isSignUpFormValid || user.isAuthLoading)
+            .opacity((!user.isSignUpFormValid || user.isAuthLoading) ? 0.6 : 1)
             
         }
         .padding()

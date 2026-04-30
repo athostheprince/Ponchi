@@ -13,7 +13,6 @@
 		D208FDF02DFDF1700097048F /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D208FDEF2DFDF1700097048F /* CustomTextField.swift */; };
 		D208FDF22DFDF71B0097048F /* PonchiRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D208FDF12DFDF71B0097048F /* PonchiRegistrationView.swift */; };
 		D20A86122EC50897003F9DE1 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20A86112EC50897003F9DE1 /* LaunchScreenView.swift */; };
-		D20A86142EC50A66003F9DE1 /* LaunchScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20A86132EC50A66003F9DE1 /* LaunchScreenController.swift */; };
 		D20A86162EC50C32003F9DE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D20A86152EC50C32003F9DE1 /* LaunchScreen.storyboard */; };
 		D21ABDA62E5247D300C96D05 /* Kica-PERSONALUSE-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D21ABDA52E5247D300C96D05 /* Kica-PERSONALUSE-Light.ttf */; };
 		D22B41D42F74552A006C29FC /* AuthResponseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B41D32F74552A006C29FC /* AuthResponseModels.swift */; };
@@ -132,6 +131,9 @@
 		D2AE30CA2E9EABA300FF1165 /* PonchiBonusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AE30C92E9EABA300FF1165 /* PonchiBonusView.swift */; };
 		D2BB61772F8637E500D057D7 /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB61762F8637E500D057D7 /* ConfirmCodeView.swift */; };
 		D2BB617A2F8D5DDD00D057D7 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB61792F8D5DDD00D057D7 /* AppConfig.swift */; };
+		D2BB619C2F953BC600D057D7 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB619B2F953BC600D057D7 /* ResetPasswordView.swift */; };
+		D2BB61A42FA27AC400D057D7 /* PonchiSpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB61A32FA27AC400D057D7 /* PonchiSpinnerView.swift */; };
+		D2BB61A62FA27B4400D057D7 /* SessionRestoreLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB61A52FA27B4400D057D7 /* SessionRestoreLoadingView.swift */; };
 		D2BEF31C2D3D725C0033CBFE /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31B2D3D725C0033CBFE /* Cart.swift */; };
 		D2BEF31E2D3D80960033CBFE /* EmptyOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31D2D3D80960033CBFE /* EmptyOrderView.swift */; };
 		D2BEF3202D42B22B0033CBFE /* PonchiListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BEF31F2D42B22B0033CBFE /* PonchiListCell.swift */; };
@@ -299,6 +301,9 @@
 		D2AE30C92E9EABA300FF1165 /* PonchiBonusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiBonusView.swift; sourceTree = "<group>"; };
 		D2BB61762F8637E500D057D7 /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
 		D2BB61792F8D5DDD00D057D7 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		D2BB619B2F953BC600D057D7 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		D2BB61A32FA27AC400D057D7 /* PonchiSpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiSpinnerView.swift; sourceTree = "<group>"; };
+		D2BB61A52FA27B4400D057D7 /* SessionRestoreLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRestoreLoadingView.swift; sourceTree = "<group>"; };
 		D2BEF31B2D3D725C0033CBFE /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
 		D2BEF31D2D3D80960033CBFE /* EmptyOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyOrderView.swift; sourceTree = "<group>"; };
 		D2BEF31F2D42B22B0033CBFE /* PonchiListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiListCell.swift; sourceTree = "<group>"; };
@@ -570,6 +575,8 @@
 				D27EEA5B2EB53440000D8EFF /* SplashView.swift */,
 				D20A86112EC50897003F9DE1 /* LaunchScreenView.swift */,
 				D20A86132EC50A66003F9DE1 /* LaunchScreenController.swift */,
+				D2BB61A32FA27AC400D057D7 /* PonchiSpinnerView.swift */,
+				D2BB61A52FA27B4400D057D7 /* SessionRestoreLoadingView.swift */,
 			);
 			path = LaunchViews;
 			sourceTree = "<group>";
@@ -844,6 +851,7 @@
 				D29046182E22DA5800A82771 /* SignUpForm.swift */,
 				D2BB61762F8637E500D057D7 /* ConfirmCodeView.swift */,
 				D208FDF12DFDF71B0097048F /* PonchiRegistrationView.swift */,
+				D2BB619B2F953BC600D057D7 /* ResetPasswordView.swift */,
 			);
 			path = Forms;
 			sourceTree = "<group>";
@@ -1103,6 +1111,7 @@
 				D28B031F2F18DE31009E809B /* BottomSheetView.swift in Sources */,
 				D28B03202F18DE31009E809B /* BottomSheet.swift in Sources */,
 				D28B03212F18DE31009E809B /* BottomSheet+TapToDismiss.swift in Sources */,
+				D2BB619C2F953BC600D057D7 /* ResetPasswordView.swift in Sources */,
 				D2D9CEAC2F275403004BF248 /* AppSettings.swift in Sources */,
 				D28088CA2F194FB3007BD88E /* YandexMapView.swift in Sources */,
 				D28B03222F18DE31009E809B /* BottomSheet+CustomBackground.swift in Sources */,
@@ -1125,6 +1134,7 @@
 				D28B03312F18DE31009E809B /* BottomSheet+Threshold.swift in Sources */,
 				D28B03322F18DE31009E809B /* BottomSheet+CloseButton.swift in Sources */,
 				D28B03332F18DE31009E809B /* BottomSheet+CustomBackground+iOS15.swift in Sources */,
+				D2BB61A42FA27AC400D057D7 /* PonchiSpinnerView.swift in Sources */,
 				D28B03342F18DE31009E809B /* TimerAnimation.swift in Sources */,
 				D23B5C942F61EFF300FEF0A7 /* PreviewFactory.swift in Sources */,
 				D28B03352F18DE31009E809B /* ViewExtension.swift in Sources */,
@@ -1156,6 +1166,7 @@
 				D2BB617A2F8D5DDD00D057D7 /* AppConfig.swift in Sources */,
 				D20A86122EC50897003F9DE1 /* LaunchScreenView.swift in Sources */,
 				D2BEF3202D42B22B0033CBFE /* PonchiListCell.swift in Sources */,
+				D2BB61A62FA27B4400D057D7 /* SessionRestoreLoadingView.swift in Sources */,
 				D23B5C8C2F61E1A600FEF0A7 /* MenuLocalDataSource.swift in Sources */,
 				D27590C32EE5C78600F1D40F /* DetailImagesView.swift in Sources */,
 				D2907BEC2EBA7B330031926C /* FontEx.swift in Sources */,
@@ -1187,7 +1198,6 @@
 				D20659C52EE5C579000B3B0F /* Comment.swift in Sources */,
 				D27590C92EE5D3DD00F1D40F /* MattePlusButton.swift in Sources */,
 				D2BEF3262D4FF0A90033CBFE /* OrderViewModel.swift in Sources */,
-				D20A86142EC50A66003F9DE1 /* LaunchScreenController.swift in Sources */,
 				D2D9CEA32F1A2CF5004BF248 /* struct BottomSheetSnapModifier.swift in Sources */,
 				D280DA112CF39D5B00B2C464 /* Ponchi.swift in Sources */,
 				D273C0182F3888FA00D0918D /* NetworkService.swift in Sources */,
@@ -1390,9 +1400,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PONCHI_API_BASE_URL = "";
-				"PONCHI_API_BASE_URL[arch=*]" = "https://api.ponchi.app/v1";
+				"PONCHI_API_BASE_URL[arch=*]" = "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1";
 				PONCHI_MENU_URL = "";
-				"PONCHI_MENU_URL[arch=*]" = "https://storage.yandexcloud.net/ponchibucket/Ponchi.json\nhttps://storage.yandexcloud.net/ponchibucket/Ponchi.json\n";
+				"PONCHI_MENU_URL[arch=*]" = "https://storage.yandexcloud.net/ponchibucket/Ponchi.json";
 				PRODUCT_BUNDLE_IDENTIFIER = come.ponchi.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

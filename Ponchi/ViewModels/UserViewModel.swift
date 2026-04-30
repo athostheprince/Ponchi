@@ -8,13 +8,18 @@
 import Foundation
 import SwiftUI
 
+enum AuthFlow {
+    case signUp
+    case resetPassword
+}
+
 @MainActor
 class UserViewModel: ObservableObject {
     // MARK: - User State
     @Published var user: User?
     @Published var isLoggedIn: Bool = false
-    
-    @Published var isAuthLoading = false 
+    @Published var isAuthLoading = false
+    @Published var isRestoringSession = false
 
     // MARK: - Auth Draft
     @Published var authPhone: String = ""
@@ -24,6 +29,14 @@ class UserViewModel: ObservableObject {
     @Published var smsCode: String = ""
     @Published var isAwaitingSMSCode: Bool = false
     @Published var authErrorMessage: String?
+    
+    //MARK: - Retry Auth
+    
+    @Published var authFlow: AuthFlow = .signUp
+    @Published var newPassword: String = ""
+    @Published var confirmNewPassword: String = ""
+    @Published var showResetPasswordSheet = false
+    @Published var retryAfter: Int = 0
 
     // MARK: - Profile Editing
     @Published var editName: String = ""
@@ -62,12 +75,31 @@ class UserViewModel: ObservableObject {
     var isLoginFormValid: Bool {
         PhoneNumberFormatter.isValid(authPhone) && !password.isEmpty
     }
+    
+    var isResetPasswordFormValid: Bool {
+        PhoneNumberFormatter.isValid(authPhone) &&
+        newPassword.count >= 6 &&
+        newPassword == confirmNewPassword
+    }
 
     // MARK: - Auth
     func login() async {
-        guard isLoginFormValid else { return }
-        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else { return }
-
+        
+        guard isLoginFormValid else {
+            authErrorMessage = "Введи номер телефона и пароль"
+            return
+        }
+        
+        guard !isAuthLoading else { return }
+        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else {
+            authErrorMessage = "Неверный номер телефона"
+            return
+        }
+        
+        isAuthLoading = true
+        authErrorMessage = nil
+        defer { isAuthLoading = false }
+        
         do {
             let response = try await authService.login(phone: phone, password: password)
             try completeAuth(with: response)
@@ -80,9 +112,13 @@ class UserViewModel: ObservableObject {
     func restoreSession() async {
         guard let token = sessionManager.token else { return }
 
+        isRestoringSession = true
+        defer { isRestoringSession = false }
+
         do {
             let apiUser = try await authService.me(token: token)
             user = User(apiUser: apiUser)
+            bonusPoints = Double(apiUser.bonuses)
             isLoggedIn = true
             authErrorMessage = nil
         } catch let APIError.server(_, message) where message == "INVALID_TOKEN" {
@@ -94,25 +130,49 @@ class UserViewModel: ObservableObject {
         }
     }
 
-    @MainActor
     func requestSignUpCode() async {
-        guard isSignUpFormValid else { return }
-        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else { return }
+        guard isSignUpFormValid else {
+            authErrorMessage = "Проверь имя, номер телефона и совпадение паролей"
+            return
+        }
+        
+        guard !isAuthLoading else { return }
+        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else {
+            authErrorMessage = "Неверный номер телефона"
+            return
+        }
+
+        isAuthLoading = true
+        authErrorMessage = nil
+        defer { isAuthLoading = false }
 
         do {
-            _ = try await authService.requestCode(phone: phone, purpose: "signup")
+            let response = try await authService.requestCode(phone: phone, purpose: "signup")
             smsCode = ""
-            authErrorMessage = nil
+            authFlow = .signUp
+            retryAfter = response.retryAfter
             isAwaitingSMSCode = true
         } catch {
             authErrorMessage = mapAuthError(error)
         }
     }
     
-    @MainActor
     func verifySignUpCode() async {
-        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else { return }
-        guard smsCode.count == 4 else { return }
+        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else {
+            authErrorMessage = "Неверный номер телефона"
+            return
+        }
+        
+        guard smsCode.count == 4 else {
+            authErrorMessage = "Введи 4 цифры из SMS"
+            return
+        }
+        
+        guard !isAuthLoading else { return }
+
+        isAuthLoading = true
+        authErrorMessage = nil
+        defer { isAuthLoading = false }
 
         do {
             let response = try await authService.verifyCode(
@@ -126,13 +186,114 @@ class UserViewModel: ObservableObject {
             authErrorMessage = mapAuthError(error)
         }
     }
-
     
-    @MainActor
+    func requestResetCode() async {
+        guard isResetPasswordFormValid else {
+            authErrorMessage = "Проверь номер телефона и новый пароль"
+            return
+        }
+        
+        guard !isAuthLoading else { return }
+        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else {
+            authErrorMessage = "Неверный номер телефона"
+            return
+        }
+
+        isAuthLoading = true
+        authErrorMessage = nil
+        defer { isAuthLoading = false }
+
+        do {
+            let response = try await authService.requestCode(phone: phone, purpose: "reset")
+            smsCode = ""
+            authFlow = .resetPassword
+            retryAfter = response.retryAfter
+            showResetPasswordSheet = false
+            await Task.yield()
+            isAwaitingSMSCode = true
+        } catch {
+            authErrorMessage = mapAuthError(error)
+        }
+    }
+    
+    func confirmResetPassword() async {
+        guard let phone = PhoneNumberFormatter.canonical(from: authPhone) else {
+            authErrorMessage = "Неверный номер телефона"
+            return
+        }
+        
+        guard smsCode.count == 4 else {
+            authErrorMessage = "Введи 4 цифры из SMS"
+            return
+        }
+        
+        guard newPassword.count >= 6 else {
+            authErrorMessage = "Пароль должен быть не короче 6 символов"
+            return
+        }
+        
+        guard newPassword == confirmNewPassword else {
+            authErrorMessage = "Пароли не совпадают"
+            return
+        }
+        
+        guard !isAuthLoading else { return }
+
+        isAuthLoading = true
+        authErrorMessage = nil
+        defer { isAuthLoading = false }
+
+        do {
+            _ = try await authService.resetPassword(
+                phone: phone,
+                code: smsCode,
+                newPassword: newPassword
+            )
+
+            isAwaitingSMSCode = false
+            showResetPasswordSheet = false
+            password = newPassword
+            smsCode = ""
+            newPassword = ""
+            confirmNewPassword = ""
+            retryAfter = 0
+            authFlow = .signUp
+            authErrorMessage = nil
+        } catch {
+            authErrorMessage = mapAuthError(error)
+        }
+    }
+    func confirmCode() async {
+        switch authFlow {
+        case .signUp:
+            await verifySignUpCode()
+        case .resetPassword:
+            await confirmResetPassword()
+        }
+    }
+    
+    func resendCode() async {
+        switch authFlow {
+        case .signUp:
+            await requestSignUpCode()
+        case .resetPassword:
+            await requestResetCode()
+        }
+    }
+    
+    func tickResendTimer() {
+        if retryAfter > 0 {
+            retryAfter -= 1
+        }
+    }
+    
     func cancelSignUpCodeFlow() {
+        let shouldRestoreResetSheet = authFlow == .resetPassword
         smsCode = ""
         authErrorMessage = nil
+        retryAfter = 0
         isAwaitingSMSCode = false
+        showResetPasswordSheet = shouldRestoreResetSheet
     }
 
     private func clearAuthFields() {
@@ -141,12 +302,17 @@ class UserViewModel: ObservableObject {
         password = ""
         confirmPassword = ""
         smsCode = ""
+        newPassword = ""
+        confirmNewPassword = ""
+        retryAfter = 0
+        authFlow = .signUp
         isAwaitingSMSCode = false
     }
     
     private func completeAuth(with response: AuthSuccessResponse) throws {
         try sessionManager.save(token: response.accessToken)
         user = User(apiUser: response.user)
+        bonusPoints = Double(response.user.bonuses) // временно
         isLoggedIn = true
         clearAuthFields()
         showProfile = false
@@ -155,12 +321,12 @@ class UserViewModel: ObservableObject {
 
 
     private func mapAuthError(_ error: Error) -> String {
-        guard case let APIError.server(_, message) = error else {
-            return "Не удалось выполнить запрос"
-        }
-        
         if error is SessionManagerError {
             return "Не удалось сохранить сессию на устройстве"
+        }
+
+        guard case let APIError.server(_, message) = error else {
+            return "Не удалось выполнить запрос. Проверь интернет и попробуй еще раз."
         }
 
         switch message {
@@ -230,6 +396,9 @@ class UserViewModel: ObservableObject {
         showEditProfile = false
         userIsValid = false
         bonusPoints = 0
+        showResetPasswordSheet = false
+        retryAfter = 0
+        authFlow = .signUp
         
         clearAuthFields() 
     }

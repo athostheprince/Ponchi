@@ -11,36 +11,45 @@ import UIKit
 import YandexMapsMobile
 #endif
 
+private enum PreviewRuntime {
+    static var isActive: Bool {
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" ||
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PLAYGROUNDS"] == "1"
+    }
+}
+
 @main
 struct PonchiApp: App {
-    
-    private static let authBaseURL = AppConfig.apiBaseURL
-    let url = AppConfig.menuURL
-    
+    private enum StartupPhase {
+        case launch
+        case bootstrapping
+        case ready
+    }
+
+    private static let previewMenuURL = URL(string: "https://storage.yandexcloud.net/ponchibucket/Ponchi.json")!
+    private static let previewAuthBaseURL = URL(string: "https://example.com/v1")!
+    private let launchDelay: TimeInterval = 1.5
+
     let ponchiViewModel: PonchiViewModel
-    var cart = Cart()
-    var order = OrderViewModel()
+    let cart = Cart()
+    let order = OrderViewModel()
     @StateObject private var user: UserViewModel
 
-    @State private var showLaunchScreen = true
+    @State private var startupPhase: StartupPhase = .launch
+    @State private var didStartBootstrap = false
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     private var isRunningPreviews: Bool {
-        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" ||
-        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PLAYGROUNDS"] == "1"
+        PreviewRuntime.isActive
     }
-    
-//    private static let authBaseURL = URL(
-//        string: "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1"
-//    )!
 
     private static func makeNetworkService() -> NetworkService {
         NetworkService()
     }
 
-    private static func makeMenuUseCase(network: NetworkService) -> LoadMenuUseCase {
-        let url = URL(string: "https://storage.yandexcloud.net/ponchibucket/Ponchi.json")!
+    private static func makeMenuUseCase(network: NetworkService, isPreview: Bool) -> LoadMenuUseCase {
+        let url = isPreview ? previewMenuURL : AppConfig.menuURL
         let remote = MenuRemoteDataSource(menuURL: url, network: network)
         let local = MenuLocalDataSource()
         let repo = DefaultMenuRepository(remote: remote, local: local)
@@ -48,9 +57,10 @@ struct PonchiApp: App {
         return LoadMenuUseCase(repo: repo)
     }
 
-    private static func makeUserViewModel(network: NetworkService) -> UserViewModel {
+    private static func makeUserViewModel(network: NetworkService, isPreview: Bool) -> UserViewModel {
+        let authBaseURL = isPreview ? previewAuthBaseURL : AppConfig.apiBaseURL
         let authService = AuthService(network: network, baseURL: authBaseURL)
-        let keychain = KeychainService()
+        let keychain = KeychainService(service: isPreview ? "Ponchi.preview" : Bundle.main.bundleIdentifier ?? "Ponchi")
         let sessionManager = SessionManager(keychain: keychain)
 
         return UserViewModel(
@@ -60,9 +70,16 @@ struct PonchiApp: App {
     }
 
     init() {
+        let isPreview = PreviewRuntime.isActive
         let network = Self.makeNetworkService()
-        self.ponchiViewModel = PonchiViewModel(loadMenuUseCase: Self.makeMenuUseCase(network: network))
-        _user = StateObject(wrappedValue: Self.makeUserViewModel(network: network))
+
+        self.ponchiViewModel = PonchiViewModel(
+            loadMenuUseCase: Self.makeMenuUseCase(network: network, isPreview: isPreview)
+        )
+        _user = StateObject(
+            wrappedValue: Self.makeUserViewModel(network: network, isPreview: isPreview)
+        )
+
         if !isRunningPreviews {
             UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light)
         }
@@ -70,51 +87,89 @@ struct PonchiApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if isRunningPreviews {
-                PreviewHostView()
-            } else {
-                ZStack {
-                    if showLaunchScreen {
+            rootContent
+        }
+    }
 
-                        LaunchScreenView()
-
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-
-                                    let generator = UIImpactFeedbackGenerator(style: .soft)
-                                    generator.prepare()
-                                    generator.impactOccurred()
-
-                                    withAnimation {
-                                        showLaunchScreen.toggle()
-                                    }
-                                }
-                            }
-                    } else {
-                        PonchiCustomTabBar()
-                            .environmentObject(cart)
-                            .environmentObject(order)
-                            .environmentObject(ponchiViewModel)
-                            .environmentObject(user)
-                            .preferredColorScheme(.light)
-                    }
-                }
-                .onAppear {
-                    Task { await ponchiViewModel.loadPonchi() }
-                }
-                .onAppear {
-                    Task { await user.restoreSession() }
+    @ViewBuilder
+    private var rootContent: some View {
+        if isRunningPreviews {
+            PreviewHostView()
+        } else {
+            ZStack {
+                switch startupPhase {
+                case .launch:
+                    launchScreen
+                case .bootstrapping:
+                    bootstrapScreen
+                case .ready:
+                    mainAppScreen
                 }
             }
+        }
+    }
 
+    private var launchScreen: some View {
+        LaunchScreenView()
+            .onAppear {
+                runLaunchSequence()
+            }
+    }
+
+    private var bootstrapScreen: some View {
+        SessionRestoreLoadingView()
+            .task {
+                await startBootstrapIfNeeded()
+            }
+    }
+
+    private var mainAppScreen: some View {
+        PonchiCustomTabBar()
+            .environmentObject(cart)
+            .environmentObject(order)
+            .environmentObject(ponchiViewModel)
+            .environmentObject(user)
+            .preferredColorScheme(.light)
+    }
+
+    private func runLaunchSequence() {
+        guard startupPhase == .launch else { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + launchDelay) {
+            guard startupPhase == .launch else { return }
+
+            triggerLaunchHaptic()
+
+            withAnimation {
+                startupPhase = .bootstrapping
+            }
+        }
+    }
+
+    private func triggerLaunchHaptic() {
+        let generator = UIImpactFeedbackGenerator(style: .soft)
+        generator.prepare()
+        generator.impactOccurred()
+    }
+
+    @MainActor
+    private func startBootstrapIfNeeded() async {
+        guard !didStartBootstrap else { return }
+        didStartBootstrap = true
+
+        async let menuLoad: Void = ponchiViewModel.loadPonchi()
+        async let sessionRestore: Void = user.restoreSession()
+        _ = await (menuLoad, sessionRestore)
+
+        withAnimation {
+            startupPhase = .ready
         }
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     private var isRunningPreviews: Bool {
-        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" ||
-        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PLAYGROUNDS"] == "1"
+        PreviewRuntime.isActive
     }
 
     func application(

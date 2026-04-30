@@ -38,8 +38,8 @@ struct PonchiRegistrationView: View {
                         .scaledToFit()
                         .offset(
                             y: selectedTab == .signup
-                            ? geo.size.height * 0.03   // 🔹 чуть-чуть выше (~3% экрана)
-                            : geo.size.height * 0.05    // 🔹 опускаем вниз (~7% экрана)
+                            ? geo.size.height * 0.05
+                            : geo.size.height * 0.07
                         )
                         .rotation3DEffect(
                             .degrees(selectedTab == .signup ? -8 : 8),
@@ -99,7 +99,7 @@ struct PonchiRegistrationView: View {
                     if selectedTab == .login {
                         LoginForm()
                             .environmentObject(user)
-                            .offset(y: -geo.size.height * 0.04)
+                            .offset(y: -geo.size.height * 0.05)
                     } else {
                         SignUpForm()
                             .environmentObject(user)
@@ -127,6 +127,11 @@ struct PonchiRegistrationView: View {
             }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .sheet(isPresented: $user.showResetPasswordSheet) {
+            ResetPasswordView()
+                .environmentObject(user)
+                .presentationDetents([.medium, .large])
+        }
     }
 }
 

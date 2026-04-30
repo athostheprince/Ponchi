@@ -61,6 +61,14 @@ module.exports.handler = async function (event) {
 
     await client.query(
       `
+      DELETE FROM sms_codes
+      WHERE phone = $1 AND purpose = $2
+      `,
+      [phone, purpose]
+    );
+
+    await client.query(
+      `
       INSERT INTO sms_codes (id, phone, code, expires_at, purpose)
       VALUES ($1, $2, $3, $4, $5)
       `,
