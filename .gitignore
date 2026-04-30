@@ -4,4 +4,8 @@
 Ponchi.xcodeproj/project.xcworkspace/xcuserdata/
 Ponchi.xcworkspace/xcuserdata/
 Ponchi/Utilites/Preview /
+Ponchi/Utilites/Preview/
 Pods/
+ponchi-functions/*.zip
+Ponchi-clean/
+.DS_Store

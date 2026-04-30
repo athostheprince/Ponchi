@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIKit
-//import BottomSheetSwiftUI
 
 struct PonchiDrinkDetailView: View {
     @EnvironmentObject var ponchiViewModel: PonchiViewModel
@@ -267,9 +266,33 @@ struct PonchiDrinkDetailView: View {
     }
 }
 
-#Preview {
-    PonchiCustomTabBar()
-        .environmentObject(PreviewFactory.makePonchiViewModel())
-        .environmentObject(Cart())
-        .environmentObject(PreviewFactory.makeUserViewModel())
+#if DEBUG
+private struct PonchiDrinkDetailPreviewHost: View {
+    @StateObject private var ponchiViewModel: PonchiViewModel
+    @StateObject private var cart = Cart()
+    @StateObject private var user: UserViewModel
+
+    init() {
+        let vm = PreviewFactory.makePonchiViewModel()
+        vm.ponchis = [
+            MockPonchiData.cappuccino,
+            MockPonchiData.latte,
+            MockPonchiData.americano
+        ]
+        vm.selectedPonchi = MockPonchiData.cappuccino
+        _ponchiViewModel = StateObject(wrappedValue: vm)
+        _user = StateObject(wrappedValue: PreviewFactory.makeUserViewModel())
+    }
+
+    var body: some View {
+        PonchiDrinkDetailView()
+            .environmentObject(ponchiViewModel)
+            .environmentObject(cart)
+            .environmentObject(user)
+    }
 }
+
+#Preview {
+    PonchiDrinkDetailPreviewHost()
+}
+#endif
