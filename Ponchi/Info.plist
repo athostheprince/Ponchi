@@ -4,6 +4,8 @@
 <dict>
 	<key>PonchiAPIBaseURL</key>
 	<string>$(PONCHI_API_BASE_URL)</string>
+	<key>PonchiAuthBackend</key>
+	<string>$(PONCHI_AUTH_BACKEND)</string>
 	<key>PonchiMenuURL</key>
 	<string>$(PONCHI_MENU_URL)</string>
 	<key>UIAppFonts</key>

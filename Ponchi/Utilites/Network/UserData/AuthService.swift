@@ -10,15 +10,17 @@ import Foundation
 struct AuthService {
     private let network: NetworkService
     private let baseURL: URL
+    private let backend: AppConfig.AuthBackend
 
-    init(network: NetworkService, baseURL: URL) {
+    init(network: NetworkService, baseURL: URL, backend: AppConfig.AuthBackend = .yandex) {
         self.network = network
         self.baseURL = baseURL
+        self.backend = backend
     }
 
     func login(phone: String, password: String) async throws -> AuthSuccessResponse {
             try await network.request(
-                baseURL.appendingPathComponent("auth/login"),
+                endpointURL(yandexPath: "auth/login", supabaseFunction: "auth-login"),
                 method: "POST",
                 body: LoginRequest(phone: phone, password: password)
             )
@@ -28,7 +30,7 @@ struct AuthService {
         let request = RequestCodeRequest(phone: phone, purpose: purpose)
 
         return try await network.request(
-            baseURL.appendingPathComponent("auth/request_code"),
+            endpointURL(yandexPath: "auth/request_code", supabaseFunction: "auth-request-code"),
             method: "POST",
             body: request
         )
@@ -38,7 +40,7 @@ struct AuthService {
         let request = VerifyCodeRequest(phone: phone, code: code, name: name, password: password)
 
         return try await network.request(
-            baseURL.appendingPathComponent("auth/verify_code"),
+            endpointURL(yandexPath: "auth/verify_code", supabaseFunction: "auth-verify-code"),
             method: "POST",
             body: request
         )
@@ -48,7 +50,7 @@ struct AuthService {
         let request = ResetPasswordRequest(phone: phone, code: code, newPassword: newPassword)
 
         return try await network.request(
-            baseURL.appendingPathComponent("auth/reset_password"),
+            endpointURL(yandexPath: "auth/reset_password", supabaseFunction: "auth-reset-password"),
             method: "POST",
             body: request
         )
@@ -56,9 +58,18 @@ struct AuthService {
 
     func me(token: String) async throws -> APIUser {
             try await network.request(
-                baseURL.appendingPathComponent("me"),
+                endpointURL(yandexPath: "me", supabaseFunction: "auth-me"),
                 method: "GET",
                 headers: ["Authorization": "Bearer \(token)"]
             )
         }
+
+    private func endpointURL(yandexPath: String, supabaseFunction: String) -> URL {
+        switch backend {
+        case .yandex:
+            return baseURL.appendingPathComponent(yandexPath)
+        case .supabase:
+            return baseURL.appendingPathComponent(supabaseFunction)
+        }
+    }
 }

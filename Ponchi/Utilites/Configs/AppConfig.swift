@@ -8,6 +8,15 @@
 import Foundation
 
 enum AppConfig {
+    enum AuthBackend: String {
+        case yandex
+        case supabase
+
+        static func parse(_ rawValue: String) -> AuthBackend {
+            AuthBackend(rawValue: rawValue.lowercased()) ?? .yandex
+        }
+    }
+
     static var apiBaseURL: URL {
         guard
             let raw = Bundle.main.object(forInfoDictionaryKey: "PonchiAPIBaseURL") as? String,
@@ -16,6 +25,14 @@ enum AppConfig {
             fatalError("PonchiAPIBaseURL is missing or invalid")
         }
         return url
+    }
+
+    static var authBackend: AuthBackend {
+        guard let raw = Bundle.main.object(forInfoDictionaryKey: "PonchiAuthBackend") as? String else {
+            return .yandex
+        }
+
+        return AuthBackend.parse(raw)
     }
 
     static var menuURL: URL {

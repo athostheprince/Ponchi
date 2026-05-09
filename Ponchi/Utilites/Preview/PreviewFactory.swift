@@ -34,7 +34,7 @@ enum PreviewFactory {
 
     @MainActor static func makeUserViewModel(network: NetworkService? = nil) -> UserViewModel {
         let network = network ?? makeNetworkService()
-        let authService = AuthService(network: network, baseURL: authBaseURL)
+        let authService = AuthService(network: network, baseURL: authBaseURL, backend: .yandex)
         let keychain = KeychainService(service: "Ponchi.preview")
         let sessionManager = SessionManager(keychain: keychain)
 

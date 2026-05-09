@@ -13,3 +13,5 @@ supabase/.branches/
 supabase/.temp/
 supabase/.env
 supabase/.env.*
+supabase/functions/.env
+supabase/functions/.env.*

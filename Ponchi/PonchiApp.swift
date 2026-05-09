@@ -59,7 +59,8 @@ struct PonchiApp: App {
 
     private static func makeUserViewModel(network: NetworkService, isPreview: Bool) -> UserViewModel {
         let authBaseURL = isPreview ? previewAuthBaseURL : AppConfig.apiBaseURL
-        let authService = AuthService(network: network, baseURL: authBaseURL)
+        let authBackend: AppConfig.AuthBackend = isPreview ? .yandex : AppConfig.authBackend
+        let authService = AuthService(network: network, baseURL: authBaseURL, backend: authBackend)
         let keychain = KeychainService(service: isPreview ? "Ponchi.preview" : Bundle.main.bundleIdentifier ?? "Ponchi")
         let sessionManager = SessionManager(keychain: keychain)
 

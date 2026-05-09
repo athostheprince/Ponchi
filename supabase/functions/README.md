@@ -1,22 +1,57 @@
 # Supabase Edge Functions
 
-This directory is reserved for the future migration from Yandex Cloud Functions to Supabase Edge Functions.
+Supabase replacement for the Yandex Cloud auth functions in `ponchi-functions/`.
 
-The current production functions remain in `ponchi-functions/` because they use the Yandex/Node.js handler shape:
+## Functions
 
-- `module.exports.handler`
-- CommonJS `require`
-- Node packages such as `pg` and `bcryptjs`
-- `root.crt` for Yandex Managed PostgreSQL TLS
+- `auth-request-code`
+- `auth-verify-code`
+- `auth-login`
+- `auth-reset-password`
+- `auth-me`
 
-Supabase Edge Functions run on the Deno-based Edge Runtime. Move each function here only after porting it to `Deno.serve(...)`, replacing Node-specific imports, and configuring any required secrets in Supabase.
+The functions keep the same response contract as the iOS client expects:
 
-Suggested migration order:
+- `access_token`
+- `retry_after`
+- `created_at`
+- `{ "error": "ERROR_CODE" }`
 
-1. `auth-me`
-2. `auth-login`
-3. `auth-request-code`
-4. `auth-verify-code`
-5. `auth-reset-password`
+## Secrets
 
-After a function is ported, add its per-function settings to `supabase/config.toml`.
+Supabase provides `SUPABASE_DB_URL` to Edge Functions automatically. Do not commit database URLs, service-role keys, or SMS credentials.
+
+For local SMS testing:
+
+```bash
+supabase secrets set SMS_MODE=debug
+```
+
+For production SMS delivery, configure a webhook that accepts:
+
+```json
+{ "phone": "+79990000000", "code": "1234" }
+```
+
+Then set:
+
+```bash
+supabase secrets set SMS_WEBHOOK_URL="https://example.com/send-sms"
+supabase secrets set SMS_WEBHOOK_TOKEN="secret-token"
+```
+
+`SMS_WEBHOOK_TOKEN` is optional. If neither `SMS_MODE=debug` nor `SMS_WEBHOOK_URL` is configured, `auth-request-code` returns `SMS_SEND_FAILED` and deletes the generated code.
+
+## iOS base URL
+
+For Supabase, set the app API base URL to:
+
+```text
+https://<project-ref>.supabase.co/functions/v1
+```
+
+and set `PONCHI_AUTH_BACKEND` to:
+
+```text
+supabase
+```
