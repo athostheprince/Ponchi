@@ -1363,7 +1363,7 @@
 				"PONCHI_API_BASE_URL[arch=*]" = "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1";
 				PONCHI_AUTH_BACKEND = yandex;
 				PONCHI_MENU_URL = "";
-				"PONCHI_MENU_URL[arch=*]" = "https://storage.yandexcloud.net/ponchibucket/Ponchi.json";
+				"PONCHI_MENU_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json";
 				PRODUCT_BUNDLE_IDENTIFIER = come.ponchi.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1404,7 +1404,7 @@
 				"PONCHI_API_BASE_URL[arch=*]" = "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1";
 				PONCHI_AUTH_BACKEND = yandex;
 				PONCHI_MENU_URL = "";
-				"PONCHI_MENU_URL[arch=*]" = "https://storage.yandexcloud.net/ponchibucket/Ponchi.json";
+				"PONCHI_MENU_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json";
 				PRODUCT_BUNDLE_IDENTIFIER = come.ponchi.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -20,7 +20,7 @@ enum PreviewFactory {
 
     static func makeMenuUseCase(network: NetworkService? = nil) -> LoadMenuUseCase {
         let network = network ?? makeNetworkService()
-        let url = URL(string: "https://storage.yandexcloud.net/ponchibucket/Ponchi.json")!
+        let url = URL(string: "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json")!
         let remote = MenuRemoteDataSource(menuURL: url, network: network)
         let local = MenuLocalDataSource()
         let repo = DefaultMenuRepository(remote: remote, local: local)

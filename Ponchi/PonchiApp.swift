@@ -26,7 +26,7 @@ struct PonchiApp: App {
         case ready
     }
 
-    private static let previewMenuURL = URL(string: "https://storage.yandexcloud.net/ponchibucket/Ponchi.json")!
+    private static let previewMenuURL = URL(string: "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json")!
     private static let previewAuthBaseURL = URL(string: "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1")!
     private let launchDelay: TimeInterval = 1.5
 
