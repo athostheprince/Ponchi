@@ -9,6 +9,7 @@ const CODE_RE = /^\d{4}$/;
 const MIN_PASSWORD_LENGTH = 6;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const PG_UNIQUE_VIOLATION = "23505";
+const MAX_CODE_ATTEMPTS = 5;
 
 function json(statusCode, payload) {
   return {
@@ -82,7 +83,7 @@ module.exports.handler = async function (event) {
 
     const codeResult = await client.query(
       `
-      SELECT id, code, expires_at
+      SELECT id, code, expires_at, attempts
       FROM sms_codes
       WHERE phone = $1 AND purpose = 'signup'
       ORDER BY created_at DESC
@@ -101,13 +102,29 @@ module.exports.handler = async function (event) {
     const smsCode = codeResult.rows[0];
 
     if (new Date(smsCode.expires_at).getTime() < Date.now()) {
-      await client.query("ROLLBACK");
+      await client.query("DELETE FROM sms_codes WHERE id = $1", [smsCode.id]);
+      await client.query("COMMIT");
       transactionStarted = false;
       return json(400, { error: "CODE_EXPIRED" });
     }
 
-    if (smsCode.code !== code) {
+    if (smsCode.attempts >= MAX_CODE_ATTEMPTS) {
       await client.query("ROLLBACK");
+      transactionStarted = false;
+      return json(429, { error: "TOO_MANY_ATTEMPTS" });
+    }
+
+    if (smsCode.code !== code) {
+      await client.query(
+        `
+        UPDATE sms_codes
+        SET attempts = attempts + 1
+        WHERE id = $1
+        `,
+        [smsCode.id]
+      );
+
+      await client.query("COMMIT");
       transactionStarted = false;
       return json(400, { error: "INVALID_CODE" });
     }

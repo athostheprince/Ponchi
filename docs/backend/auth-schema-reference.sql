@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS sms_codes (
   phone TEXT NOT NULL,
   code TEXT NOT NULL,
   purpose TEXT NOT NULL CHECK (purpose IN ('signup', 'reset')),
+  attempts INTEGER NOT NULL DEFAULT 0,
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

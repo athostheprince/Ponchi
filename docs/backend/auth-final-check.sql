@@ -16,7 +16,7 @@ WHERE table_schema = 'public'
   AND (
     (table_name = 'users' AND column_name IN ('id', 'phone', 'password_hash', 'name', 'bonuses', 'avatar', 'created_at'))
     OR
-    (table_name = 'sms_codes' AND column_name IN ('id', 'phone', 'code', 'expires_at', 'purpose', 'created_at'))
+    (table_name = 'sms_codes' AND column_name IN ('id', 'phone', 'code', 'attempts', 'expires_at', 'purpose', 'created_at'))
     OR
     (table_name = 'sessions' AND column_name IN ('token', 'user_id', 'expires_at', 'created_at'))
   )
@@ -39,7 +39,7 @@ FROM users
 ORDER BY created_at DESC
 LIMIT 10;
 
-SELECT id, phone, code, purpose, expires_at, created_at
+SELECT id, phone, code, purpose, attempts, expires_at, created_at
 FROM sms_codes
 ORDER BY created_at DESC
 LIMIT 10;

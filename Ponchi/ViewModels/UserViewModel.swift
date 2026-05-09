@@ -61,7 +61,7 @@ class UserViewModel: ObservableObject {
     init(authService: AuthService, sessionManager: SessionManager) {
             self.authService = authService
             self.sessionManager = sessionManager
-            self.isLoggedIn = sessionManager.isLoggedIn
+            self.isLoggedIn = false
         }
 
     // MARK: - Validation
@@ -110,7 +110,11 @@ class UserViewModel: ObservableObject {
 
 
     func restoreSession() async {
-        guard let token = sessionManager.token else { return }
+        guard let token = sessionManager.token else {
+            user = nil
+            isLoggedIn = false
+            return
+        }
 
         isRestoringSession = true
         defer { isRestoringSession = false }
@@ -126,6 +130,8 @@ class UserViewModel: ObservableObject {
             user = nil
             isLoggedIn = false
         } catch {
+            user = nil
+            isLoggedIn = false
             authErrorMessage = "Не удалось проверить сессию. Проверьте интернет."
         }
     }
@@ -147,7 +153,7 @@ class UserViewModel: ObservableObject {
         defer { isAuthLoading = false }
 
         do {
-            let response = try await authService.requestCode(phone: phone, purpose: "signup")
+            let response = try await authService.requestCode(phone: phone, purpose: .signup)
             smsCode = ""
             authFlow = .signUp
             retryAfter = response.retryAfter
@@ -204,7 +210,7 @@ class UserViewModel: ObservableObject {
         defer { isAuthLoading = false }
 
         do {
-            let response = try await authService.requestCode(phone: phone, purpose: "reset")
+            let response = try await authService.requestCode(phone: phone, purpose: .reset)
             smsCode = ""
             authFlow = .resetPassword
             retryAfter = response.retryAfter
@@ -348,6 +354,14 @@ class UserViewModel: ObservableObject {
             return "Пользователь с таким номером уже существует"
         case "TOO_MANY_REQUESTS":
             return "Слишком много запросов, попробуйте позже"
+        case "INVALID_JSON":
+            return "Некорректный запрос"
+        case "INVALID_PURPOSE":
+            return "Некорректный тип кода"
+        case "SMS_SEND_FAILED":
+            return "Не удалось отправить код. Попробуйте позже"
+        case "TOO_MANY_ATTEMPTS":
+            return "Слишком много неверных попыток. Запросите новый код"
         default:
             return "Что-то пошло не так"
         }

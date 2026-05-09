@@ -14,7 +14,7 @@ struct LoginRequest: Encodable {
 
 struct RequestCodeRequest: Encodable {
     let phone: String
-    let purpose: String
+    let purpose: AuthCodePurpose
 }
 
 struct VerifyCodeRequest: Encodable {
@@ -28,4 +28,9 @@ struct ResetPasswordRequest: Encodable {
     let phone: String
     let code: String
     let newPassword: String 
+}
+
+enum AuthCodePurpose: String, Encodable {
+    case signup
+    case reset
 }

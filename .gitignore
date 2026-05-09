@@ -9,3 +9,7 @@ Pods/
 ponchi-functions/*.zip
 Ponchi-clean/
 .DS_Store
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+supabase/.env.*

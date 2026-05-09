@@ -24,7 +24,7 @@ struct AuthService {
             )
         }
 
-    func requestCode(phone: String, purpose: String) async throws -> RequestCodeResponse {
+    func requestCode(phone: String, purpose: AuthCodePurpose) async throws -> RequestCodeResponse {
         let request = RequestCodeRequest(phone: phone, purpose: purpose)
 
         return try await network.request(
