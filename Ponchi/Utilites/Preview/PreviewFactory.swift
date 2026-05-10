@@ -11,7 +11,7 @@ import Foundation
 enum PreviewFactory {
     
     private static let authBaseURL = URL(
-        string: "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1"
+        string: "https://riknabdpryhyoyrgjkgk.supabase.co/functions/v1"
     )!
     
     static func makeNetworkService() -> NetworkService {
@@ -34,7 +34,7 @@ enum PreviewFactory {
 
     @MainActor static func makeUserViewModel(network: NetworkService? = nil) -> UserViewModel {
         let network = network ?? makeNetworkService()
-        let authService = AuthService(network: network, baseURL: authBaseURL, backend: .yandex)
+        let authService = AuthService(network: network, baseURL: authBaseURL, backend: .supabase)
         let keychain = KeychainService(service: "Ponchi.preview")
         let sessionManager = SessionManager(keychain: keychain)
 

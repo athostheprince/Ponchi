@@ -7,6 +7,7 @@ This document tracks the safe migration from Yandex Cloud Functions to Supabase 
 - `supabase/config.toml`
 - `supabase/migrations/20260509192000_auth_initial_schema.sql`
 - `supabase/migrations/20260509193000_auth_week_2.sql`
+- `supabase/migrations/20260510193000_orders_schema.sql`
 - `supabase/functions/auth-request-code`
 - `supabase/functions/auth-verify-code`
 - `supabase/functions/auth-login`
@@ -16,6 +17,8 @@ This document tracks the safe migration from Yandex Cloud Functions to Supabase 
 The old Yandex functions stay in `ponchi-functions/` until Supabase is verified in production.
 
 The initial schema enables Row Level Security on auth tables and does not add public policies. The mobile app should not access these tables directly; it should call Edge Functions only.
+
+The orders schema stores submitted orders in `orders` and the cart line items in `order_items`. These tables also use Row Level Security and should be accessed through Edge Functions rather than directly from the mobile app.
 
 ## GitHub integration settings
 
@@ -54,14 +57,14 @@ supabase secrets set SMS_WEBHOOK_TOKEN="secret-token"
 
 ## iOS switch
 
-When Supabase is ready, update the app build settings:
+The app build settings for Supabase auth are:
 
 ```text
 PONCHI_AUTH_BACKEND = supabase
-PONCHI_API_BASE_URL = https://<project-ref>.supabase.co/functions/v1
+PONCHI_API_BASE_URL = https://riknabdpryhyoyrgjkgk.supabase.co/functions/v1
 ```
 
-Do this after the functions are deployed and tested. Until then, keep:
+If auth functions are not deployed or SMS is not configured yet, temporarily roll back to:
 
 ```text
 PONCHI_AUTH_BACKEND = yandex

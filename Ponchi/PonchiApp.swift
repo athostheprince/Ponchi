@@ -27,7 +27,7 @@ struct PonchiApp: App {
     }
 
     private static let previewMenuURL = URL(string: "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json")!
-    private static let previewAuthBaseURL = URL(string: "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1")!
+    private static let previewAuthBaseURL = URL(string: "https://riknabdpryhyoyrgjkgk.supabase.co/functions/v1")!
     private let launchDelay: TimeInterval = 1.5
 
     let ponchiViewModel: PonchiViewModel
@@ -59,7 +59,7 @@ struct PonchiApp: App {
 
     private static func makeUserViewModel(network: NetworkService, isPreview: Bool) -> UserViewModel {
         let authBaseURL = isPreview ? previewAuthBaseURL : AppConfig.apiBaseURL
-        let authBackend: AppConfig.AuthBackend = isPreview ? .yandex : AppConfig.authBackend
+        let authBackend: AppConfig.AuthBackend = isPreview ? .supabase : AppConfig.authBackend
         let authService = AuthService(network: network, baseURL: authBaseURL, backend: authBackend)
         let keychain = KeychainService(service: isPreview ? "Ponchi.preview" : Bundle.main.bundleIdentifier ?? "Ponchi")
         let sessionManager = SessionManager(keychain: keychain)

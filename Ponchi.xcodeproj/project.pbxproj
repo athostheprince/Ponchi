@@ -1360,8 +1360,8 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PONCHI_API_BASE_URL = "";
-				"PONCHI_API_BASE_URL[arch=*]" = "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1";
-				PONCHI_AUTH_BACKEND = yandex;
+				"PONCHI_API_BASE_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/functions/v1";
+				PONCHI_AUTH_BACKEND = supabase;
 				PONCHI_MENU_URL = "";
 				"PONCHI_MENU_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json";
 				PRODUCT_BUNDLE_IDENTIFIER = come.ponchi.app;
@@ -1401,8 +1401,8 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PONCHI_API_BASE_URL = "";
-				"PONCHI_API_BASE_URL[arch=*]" = "https://d5dv0tsfdqg45rj2b9i8.4b4k4pg5.apigw.yandexcloud.net/v1";
-				PONCHI_AUTH_BACKEND = yandex;
+				"PONCHI_API_BASE_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/functions/v1";
+				PONCHI_AUTH_BACKEND = supabase;
 				PONCHI_MENU_URL = "";
 				"PONCHI_MENU_URL[arch=*]" = "https://riknabdpryhyoyrgjkgk.supabase.co/storage/v1/object/public/menu/Ponchi.json";
 				PRODUCT_BUNDLE_IDENTIFIER = come.ponchi.app;
