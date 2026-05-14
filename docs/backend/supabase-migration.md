@@ -8,6 +8,7 @@ This document tracks the safe migration from Yandex Cloud Functions to Supabase 
 - `supabase/migrations/20260509192000_auth_initial_schema.sql`
 - `supabase/migrations/20260509193000_auth_week_2.sql`
 - `supabase/migrations/20260510193000_orders_schema.sql`
+- `supabase/migrations/20260510194500_auth_events.sql`
 - `supabase/functions/auth-request-code`
 - `supabase/functions/auth-verify-code`
 - `supabase/functions/auth-login`
@@ -19,6 +20,8 @@ The old Yandex functions stay in `ponchi-functions/` until Supabase is verified 
 The initial schema enables Row Level Security on auth tables and does not add public policies. The mobile app should not access these tables directly; it should call Edge Functions only.
 
 The orders schema stores submitted orders in `orders` and the cart line items in `order_items`. These tables also use Row Level Security and should be accessed through Edge Functions rather than directly from the mobile app.
+
+The auth event journal stores backend auth events in `auth_events` and exposes a combined debugging view as `auth_activity`. Use [auth-events-dbeaver.sql](/Users/maryromanova/Developer/Ponchi/docs/backend/auth-events-dbeaver.sql) in DBeaver while testing signup, login, session restore, and password reset.
 
 ## GitHub integration settings
 

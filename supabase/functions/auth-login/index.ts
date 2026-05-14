@@ -1,5 +1,6 @@
 import bcrypt from "npm:bcryptjs@2.4.3";
 import { createAccessToken, PHONE_RE, sessionExpiresAt } from "../_shared/auth.ts";
+import { logAuthEvent } from "../_shared/auth-events.ts";
 import { sql } from "../_shared/db.ts";
 import { json, readJson, requireMethod } from "../_shared/http.ts";
 
@@ -33,6 +34,14 @@ Deno.serve(async (req) => {
       `;
 
       if (users.length === 0) {
+        await logAuthEvent({
+          eventType: "login_failed",
+          phone,
+          success: false,
+          errorCode: "INVALID_CREDENTIALS",
+          metadata: { reason: "user_not_found" },
+        }, tx);
+
         return json(401, { error: "INVALID_CREDENTIALS" });
       }
 
@@ -40,6 +49,15 @@ Deno.serve(async (req) => {
       const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
       if (!isPasswordValid) {
+        await logAuthEvent({
+          eventType: "login_failed",
+          phone,
+          userId: user.id,
+          success: false,
+          errorCode: "INVALID_CREDENTIALS",
+          metadata: { reason: "wrong_password" },
+        }, tx);
+
         return json(401, { error: "INVALID_CREDENTIALS" });
       }
 
@@ -49,6 +67,12 @@ Deno.serve(async (req) => {
         INSERT INTO sessions (token, user_id, expires_at)
         VALUES (${accessToken}, ${user.id}, ${sessionExpiresAt()})
       `;
+
+      await logAuthEvent({
+        eventType: "login_success",
+        phone,
+        userId: user.id,
+      }, tx);
 
       return json(200, {
         access_token: accessToken,

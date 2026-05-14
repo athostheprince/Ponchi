@@ -17,6 +17,8 @@ The functions keep the same response contract as the iOS client expects:
 - `created_at`
 - `{ "error": "ERROR_CODE" }`
 
+Auth functions also write non-blocking debug/audit events to `auth_events`. The helper catches logging failures so the user flow is not broken only because observability failed.
+
 ## Secrets
 
 Supabase provides `SUPABASE_DB_URL` to Edge Functions automatically. Do not commit database URLs, service-role keys, or SMS credentials.

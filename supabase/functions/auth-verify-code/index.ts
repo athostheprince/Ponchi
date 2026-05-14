@@ -7,6 +7,7 @@ import {
   PHONE_RE,
   sessionExpiresAt,
 } from "../_shared/auth.ts";
+import { logAuthEvent } from "../_shared/auth-events.ts";
 import { sql } from "../_shared/db.ts";
 import { json, readJson, requireMethod } from "../_shared/http.ts";
 
@@ -50,6 +51,13 @@ Deno.serve(async (req) => {
       `;
 
       if (existingUsers.length > 0) {
+        await logAuthEvent({
+          eventType: "signup_failed",
+          phone,
+          success: false,
+          errorCode: "USER_ALREADY_EXISTS",
+        }, tx);
+
         return json(409, { error: "USER_ALREADY_EXISTS" });
       }
 
@@ -63,6 +71,14 @@ Deno.serve(async (req) => {
       `;
 
       if (codeRows.length === 0) {
+        await logAuthEvent({
+          eventType: "signup_failed",
+          phone,
+          success: false,
+          errorCode: "INVALID_CODE",
+          metadata: { reason: "code_not_found" },
+        }, tx);
+
         return json(400, { error: "INVALID_CODE" });
       }
 
@@ -70,10 +86,24 @@ Deno.serve(async (req) => {
 
       if (new Date(smsCode.expires_at).getTime() < Date.now()) {
         await tx`DELETE FROM sms_codes WHERE id = ${smsCode.id}`;
+        await logAuthEvent({
+          eventType: "signup_failed",
+          phone,
+          success: false,
+          errorCode: "CODE_EXPIRED",
+        }, tx);
+
         return json(400, { error: "CODE_EXPIRED" });
       }
 
       if (smsCode.attempts >= MAX_CODE_ATTEMPTS) {
+        await logAuthEvent({
+          eventType: "signup_failed",
+          phone,
+          success: false,
+          errorCode: "TOO_MANY_ATTEMPTS",
+        }, tx);
+
         return json(429, { error: "TOO_MANY_ATTEMPTS" });
       }
 
@@ -83,6 +113,14 @@ Deno.serve(async (req) => {
           SET attempts = attempts + 1
           WHERE id = ${smsCode.id}
         `;
+
+        await logAuthEvent({
+          eventType: "signup_failed",
+          phone,
+          success: false,
+          errorCode: "INVALID_CODE",
+          metadata: { attempts: smsCode.attempts + 1 },
+        }, tx);
 
         return json(400, { error: "INVALID_CODE" });
       }
@@ -103,6 +141,12 @@ Deno.serve(async (req) => {
       `;
 
       await tx`DELETE FROM sms_codes WHERE id = ${smsCode.id}`;
+
+      await logAuthEvent({
+        eventType: "signup_completed",
+        phone,
+        userId,
+      }, tx);
 
       return json(200, {
         access_token: accessToken,

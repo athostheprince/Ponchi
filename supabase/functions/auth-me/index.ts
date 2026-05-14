@@ -1,3 +1,4 @@
+import { logAuthEvent } from "../_shared/auth-events.ts";
 import { sql } from "../_shared/db.ts";
 import { getBearerToken, json, requireMethod } from "../_shared/http.ts";
 
@@ -28,8 +29,20 @@ Deno.serve(async (req) => {
     `;
 
     if (result.length === 0) {
+      await logAuthEvent({
+        eventType: "session_restore_failed",
+        success: false,
+        errorCode: "INVALID_TOKEN",
+      });
+
       return json(401, { error: "INVALID_TOKEN" });
     }
+
+    await logAuthEvent({
+      eventType: "session_restore_success",
+      phone: result[0].phone,
+      userId: result[0].id,
+    });
 
     return json(200, result[0]);
   } catch (error) {

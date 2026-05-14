@@ -1,4 +1,5 @@
 import { PHONE_RE } from "../_shared/auth.ts";
+import { logAuthEvent } from "../_shared/auth-events.ts";
 import { sql } from "../_shared/db.ts";
 import { json, readJson, requireMethod } from "../_shared/http.ts";
 import { sendSmsCode } from "../_shared/sms.ts";
@@ -43,6 +44,17 @@ Deno.serve(async (req) => {
       const secondsPassed = Math.floor((Date.now() - createdAt) / 1000);
 
       if (secondsPassed < RESEND_COOLDOWN_SECONDS) {
+        await logAuthEvent({
+          eventType: "sms_code_rate_limited",
+          phone,
+          success: false,
+          errorCode: "TOO_MANY_REQUESTS",
+          metadata: {
+            purpose,
+            retry_after: RESEND_COOLDOWN_SECONDS - secondsPassed,
+          },
+        });
+
         return json(429, {
           error: "TOO_MANY_REQUESTS",
           retry_after: RESEND_COOLDOWN_SECONDS - secondsPassed,
@@ -74,8 +86,27 @@ Deno.serve(async (req) => {
         await sql`DELETE FROM sms_codes WHERE id = ${insertedCodeId}`;
       }
 
+      await logAuthEvent({
+        eventType: "sms_code_send_failed",
+        phone,
+        success: false,
+        errorCode: "SMS_SEND_FAILED",
+        metadata: { purpose },
+      });
+
       return json(500, { error: "SMS_SEND_FAILED" });
     }
+
+    await logAuthEvent({
+      eventType: "sms_code_requested",
+      phone,
+      metadata: {
+        purpose,
+        expires_at: expiresAt,
+        retry_after: RESEND_COOLDOWN_SECONDS,
+        sms_mode: Deno.env.get("SMS_MODE") || "webhook",
+      },
+    });
 
     return json(200, { ok: true, retry_after: RESEND_COOLDOWN_SECONDS });
   } catch (error) {
