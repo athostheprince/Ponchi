@@ -113,11 +113,11 @@ Deno.serve(async (req) => {
           eventType: "password_reset_failed",
           phone,
           success: false,
-          errorCode: "INVALID_CODE",
+          errorCode: "USER_NOT_FOUND",
           metadata: { reason: "user_not_found" },
         }, tx);
 
-        return json(400, { error: "INVALID_CODE" });
+        return json(404, { error: "USER_NOT_FOUND" });
       }
 
       const passwordHash = await bcrypt.hash(newPassword, 10);

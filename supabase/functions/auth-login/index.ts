@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
   }
 
   if (!password) {
-    return json(401, { error: "INVALID_CREDENTIALS" });
+    return json(401, { error: "INVALID_PASSWORD" });
   }
 
   try {
@@ -38,11 +38,11 @@ Deno.serve(async (req) => {
           eventType: "login_failed",
           phone,
           success: false,
-          errorCode: "INVALID_CREDENTIALS",
+          errorCode: "USER_NOT_FOUND",
           metadata: { reason: "user_not_found" },
         }, tx);
 
-        return json(401, { error: "INVALID_CREDENTIALS" });
+        return json(404, { error: "USER_NOT_FOUND" });
       }
 
       const user = users[0];
@@ -54,11 +54,11 @@ Deno.serve(async (req) => {
           phone,
           userId: user.id,
           success: false,
-          errorCode: "INVALID_CREDENTIALS",
+          errorCode: "INVALID_PASSWORD",
           metadata: { reason: "wrong_password" },
         }, tx);
 
-        return json(401, { error: "INVALID_CREDENTIALS" });
+        return json(401, { error: "INVALID_PASSWORD" });
       }
 
       const accessToken = createAccessToken();

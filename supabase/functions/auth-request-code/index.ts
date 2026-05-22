@@ -31,6 +31,38 @@ Deno.serve(async (req) => {
   let insertedCodeId: string | null = null;
 
   try {
+    const users = await sql`
+      SELECT id
+      FROM users
+      WHERE phone = ${phone}
+      LIMIT 1
+    `;
+
+    if (purpose === "reset" && users.length === 0) {
+      await logAuthEvent({
+        eventType: "sms_code_request_rejected",
+        phone,
+        success: false,
+        errorCode: "USER_NOT_FOUND",
+        metadata: { purpose },
+      });
+
+      return json(404, { error: "USER_NOT_FOUND" });
+    }
+
+    if (purpose === "signup" && users.length > 0) {
+      await logAuthEvent({
+        eventType: "sms_code_request_rejected",
+        phone,
+        userId: users[0].id,
+        success: false,
+        errorCode: "USER_ALREADY_EXISTS",
+        metadata: { purpose },
+      });
+
+      return json(409, { error: "USER_ALREADY_EXISTS" });
+    }
+
     const recent = await sql`
       SELECT created_at
       FROM sms_codes
