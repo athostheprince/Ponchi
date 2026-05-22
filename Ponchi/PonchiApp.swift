@@ -20,7 +20,7 @@ private enum PreviewRuntime {
 
 @main
 struct PonchiApp: App {
-    private enum StartupPhase {
+    private enum StartupPhase: Equatable {
         case launch
         case bootstrapping
         case ready
@@ -98,27 +98,33 @@ struct PonchiApp: App {
             PreviewHostView()
         } else {
             ZStack {
+                LaunchScreenView()
+                    .opacity(startupPhase == .ready ? 0 : 1)
+
                 switch startupPhase {
                 case .launch:
-                    launchScreen
+                    launchStartTrigger
                 case .bootstrapping:
-                    bootstrapScreen
+                    bootstrapOverlay
                 case .ready:
                     mainAppScreen
+                        .transition(.opacity)
                 }
             }
+            .animation(.easeInOut(duration: 0.24), value: startupPhase)
+            .background(LaunchScreenView.backgroundColor)
         }
     }
 
-    private var launchScreen: some View {
-        LaunchScreenView()
+    private var launchStartTrigger: some View {
+        Color.clear
             .onAppear {
                 runLaunchSequence()
             }
     }
 
-    private var bootstrapScreen: some View {
-        SessionRestoreLoadingView()
+    private var bootstrapOverlay: some View {
+        SessionRestoreLoadingView(includesLaunchBackground: false)
             .task {
                 await startBootstrapIfNeeded()
             }
@@ -141,9 +147,7 @@ struct PonchiApp: App {
 
             triggerLaunchHaptic()
 
-            withAnimation {
-                startupPhase = .bootstrapping
-            }
+            startupPhase = .bootstrapping
         }
     }
 
@@ -162,7 +166,7 @@ struct PonchiApp: App {
         async let sessionRestore: Void = user.restoreSession()
         _ = await (menuLoad, sessionRestore)
 
-        withAnimation {
+        withAnimation(.easeInOut(duration: 0.24)) {
             startupPhase = .ready
         }
     }

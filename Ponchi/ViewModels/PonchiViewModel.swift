@@ -59,7 +59,7 @@ final class PonchiViewModel: ObservableObject {
 
 extension PonchiViewModel {
     var hasTeaType: Bool {
-        selectedPonchi?.selectedTeaType != nil
+        !(selectedPonchi?.teaType?.isEmpty ?? true)
     }
 
     var hasMultipleSizes: Bool {

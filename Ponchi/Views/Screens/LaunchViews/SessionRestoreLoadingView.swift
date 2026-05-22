@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct SessionRestoreLoadingView: View {
+    var includesLaunchBackground = true
+
     var body: some View {
         ZStack {
-            LaunchScreenView()
+            if includesLaunchBackground {
+                LaunchScreenView()
+            }
 
             VStack(spacing: 18) {
                 Spacer()

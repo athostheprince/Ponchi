@@ -29,7 +29,7 @@ struct OrderCellView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     ForEach(order.items) { item in
-                        Text("\(item.name)")
+                        Text(item.displayName)
                             .font(.subheadline)
                             .bold()
                             .foregroundStyle(Color.brightGreen)

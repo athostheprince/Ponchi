@@ -33,22 +33,21 @@ struct PonchiProfileView: View {
         ZStack {
             Color.peony.ignoresSafeArea()
             VStack {
-                HStack {
-                    
-                    Spacer()
-                    
+                ZStack {
                     Text("ПРОФИЛЬ")
                         .font(.lepca(40))
                         .foregroundStyle(Color.brightGreen)
-                    
-                    Spacer()
-                    
+                }
+                .frame(maxWidth: .infinity)
+                .overlay(alignment: .trailing) {
                     CloseButton(action: {
                         HapticManager.tap()
                         user.showProfile.toggle()
                     }, color: Color.brightGreen)
                 }
-                .padding(10)
+                .padding(.horizontal, 10)
+                .padding(.top, 16)
+                .padding(.bottom, 10)
                 
                 ScrollView {
                     

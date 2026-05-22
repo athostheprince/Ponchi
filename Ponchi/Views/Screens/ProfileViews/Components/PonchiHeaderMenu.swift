@@ -38,10 +38,10 @@ struct PonchiHeaderMenu: View {
                 .foregroundStyle(ponchiViewModel.isShownCups ? Color.peony : Color.brightGreen)
                 .background(
                     Capsule()
-                        .fill(ponchiViewModel.isShownCups ? Color.brightGreen : Color.peony))
+                        .fill(ponchiViewModel.isShownCups ? Color.brightGreen : Color.biege))
                 .overlay(
                     Capsule()
-                        .stroke(ponchiViewModel.isShownCups ? Color.peony :  Color.brightGreen, lineWidth: 2)
+                        .stroke(ponchiViewModel.isShownCups ? Color.peony : Color.brightGreen, lineWidth: 2)
                 )
                 .onTapGesture {
                     HapticManager.tap()

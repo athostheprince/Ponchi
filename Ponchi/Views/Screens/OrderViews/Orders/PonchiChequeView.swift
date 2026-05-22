@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct CapsuleSegmentView: View {
     let title: String
     let isSelected: Bool
@@ -17,7 +15,7 @@ struct CapsuleSegmentView: View {
     
     var body: some View {
         Text(title)
-            .font(.custom("Kica-PERSONALUSE-Light", size: 16))
+            .font(.caviarb(16))
             .padding(.vertical, 8)
             .padding(.horizontal, 20)
             .background(
@@ -42,17 +40,26 @@ struct PonchiChequeView: View {
     @State private var selected = 0
     @Namespace private var animation
     
-    private let titles = ["В работе", "Завершенные"]
+    private let titles = ["В работе", "Завершены"]
+    private var visibleOrders: [Order] {
+        selected == 0 ? order.activeOrders : order.completedOrders
+    }
     
     var body: some View {
         //NavigationStack {
+        ZStack {
+            Color.biege
+                .ignoresSafeArea()
+
             VStack {
                 
                 Text("ЗАКАЗЫ")
-                    .font(.custom("Kica-PERSONALUSE-Light", fixedSize: 25))
+                    .font(.lepca(40))
                     .foregroundStyle(Color.brightGreen)
+                    .padding(8)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 // MARK: - Сегменты
-                HStack {
+                HStack(spacing: 34) {
                     
                     ForEach(titles.indices, id: \.self) { index in
                         CapsuleSegmentView(
@@ -71,12 +78,11 @@ struct PonchiChequeView: View {
                 // MARK: - Контент
                 ScrollView {
                     VStack(spacing: 10) {
-                        if selected == 0 {
-                            ForEach(order.activeOrders) { order in
-                                OrderCellView(order: order)
-                            }
+                        if visibleOrders.isEmpty {
+                            EmptyOrdersStateView()
+                                .padding(.top, 58)
                         } else {
-                            ForEach(order.completedOrders) { order in
+                            ForEach(visibleOrders) { order in
                                 OrderCellView(order: order)
                             }
                         }
@@ -87,8 +93,25 @@ struct PonchiChequeView: View {
                 //Spacer()
             }
             .padding()
+        }
            // .navigationTitle("🧾 Заказы")
         //}
+    }
+}
+
+private struct EmptyOrdersStateView: View {
+    var body: some View {
+        VStack(spacing: 14) {
+            Image("emptyOrdersRaccoon")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 310)
+
+            Text("Заказов пока нет")
+                .font(.caviarb(18))
+                .foregroundStyle(Color.brightGreen.opacity(0.72))
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -99,4 +122,3 @@ struct PonchiChequeView: View {
     PonchiChequeView()
         .environmentObject(OrderViewModel())
 }
-

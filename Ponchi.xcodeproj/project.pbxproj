@@ -127,6 +127,7 @@
 		D294D0B32E8067400044B549 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D294D0B22E8067400044B549 /* UserViewModel.swift */; };
 		D2955CA62CFF786900609FAE /* PonchiHeaderMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2955CA52CFF786900609FAE /* PonchiHeaderMenu.swift */; };
 		D2955CA92CFF881400609FAE /* ColorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2955CA82CFF881400609FAE /* ColorEx.swift */; };
+		D29703AE2FB4E12600048774 /* CartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29703AD2FB4E12600048774 /* CartItem.swift */; };
 		D2A501022F1811DA00C6E85D /* YandexMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A501012F1811DA00C6E85D /* YandexMap.swift */; };
 		D2AE30CA2E9EABA300FF1165 /* PonchiBonusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AE30C92E9EABA300FF1165 /* PonchiBonusView.swift */; };
 		D2BB61772F8637E500D057D7 /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB61762F8637E500D057D7 /* ConfirmCodeView.swift */; };
@@ -297,6 +298,7 @@
 		D294D0B22E8067400044B549 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		D2955CA52CFF786900609FAE /* PonchiHeaderMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiHeaderMenu.swift; sourceTree = "<group>"; };
 		D2955CA82CFF881400609FAE /* ColorEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorEx.swift; sourceTree = "<group>"; };
+		D29703AD2FB4E12600048774 /* CartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItem.swift; sourceTree = "<group>"; };
 		D2A501012F1811DA00C6E85D /* YandexMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexMap.swift; sourceTree = "<group>"; };
 		D2AE30C92E9EABA300FF1165 /* PonchiBonusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PonchiBonusView.swift; sourceTree = "<group>"; };
 		D2BB61762F8637E500D057D7 /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				D280DA102CF39D5B00B2C464 /* Ponchi.swift */,
 				D280DA552CF3AA5100B2C464 /* User.swift */,
 				D2BEF3232D4FEFCA0033CBFE /* Order.swift */,
+				D29703AD2FB4E12600048774 /* CartItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1056,6 +1059,7 @@
 		};
 		1CA3AB391C2102D192256767 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1160,6 +1164,7 @@
 				D280AF6D2D834F95000BD5FB /* RotatingDigitView.swift in Sources */,
 				D2BEF31C2D3D725C0033CBFE /* Cart.swift in Sources */,
 				D294D0B32E8067400044B549 /* UserViewModel.swift in Sources */,
+				D29703AE2FB4E12600048774 /* CartItem.swift in Sources */,
 				D248561F2C876C6000F7727E /* PonchiCustomTabBar.swift in Sources */,
 				D28A63C02D00C719000FD2C8 /* PonchiDrinkDetailView.swift in Sources */,
 				D280DA0F2CF3943E00B2C464 /* PonchiChequeView.swift in Sources */,

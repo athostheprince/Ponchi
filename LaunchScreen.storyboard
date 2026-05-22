@@ -41,6 +41,6 @@
     </scenes>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
-        <image name="LaunchLogo" width="1024" height="1536"/>
+        <image name="LaunchLogo" width="1107" height="978"/>
     </resources>
 </document>

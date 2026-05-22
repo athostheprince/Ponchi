@@ -23,6 +23,8 @@ struct PonchiCartView: View {
                     .font(.lepca(40))
                     .foregroundStyle(!cart.items.isEmpty ? Color.peony : Color.brightGreen)
                     .padding(8)
+                    .padding(.top, 16)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 
             if !cart.items.isEmpty {
                 ZStack {
@@ -48,7 +50,7 @@ struct PonchiCartView: View {
                         ScrollView {
                             ForEach(cart.items) { item in
                                 
-                                ListCellView(image: item.image, name: item.name, price: item.totalPrice, quantity: item.quantity, toppings: item.selectedToppings.isEmpty ? "без добавок" : item.selectedToppingsDescription, size: item.hasMultipleSizes ? item.size?.rawValue ?? "" : "", increaseAction: {
+                                ListCellView(image: item.displayImage, name: item.displayName, price: item.totalPrice, quantity: item.quantity, toppings: item.selectedToppings.isEmpty ? "без добавок" : item.selectedToppingsDescription, size: item.hasMultipleSizes ? item.size?.rawValue ?? "" : "", increaseAction: {
                                     cart.addItem(item)
                                     
                                 }, decreaseAction: {
@@ -100,7 +102,7 @@ struct PonchiCartView: View {
                 }
                 
                 if cart.items.isEmpty {
-                    EmptyOrderView(imageName: "emptyOrder", message: "Самое время что-нибудь выбрать!", action: { ponchi.selectedTab(0) } )
+                    EmptyOrderView(imageName: "ponchiEmptyCart", message: "Самое время что-нибудь выбрать!", action: { ponchi.selectedTab(0) } )
                 }
             }
         }

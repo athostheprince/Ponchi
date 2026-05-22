@@ -40,13 +40,8 @@ final class Cart: ObservableObject {
     }
     
     func addItem(_ ponchi: Ponchi) {
-        if let index = items.firstIndex(where: {
-            $0.id == ponchi.id &&
-            $0.size == ponchi.size &&
-            $0.selectedToppings == ponchi.selectedToppings //&&
-            //$0.comment == ponchi.comment
-        }) {
-            items[index].quantity += ponchi.quantity
+        if let index = items.firstIndex(where: { $0.id == ponchi.id }) {
+            items[index].quantity += 1
         } else {
             items.append(ponchi)
         }

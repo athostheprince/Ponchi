@@ -13,6 +13,9 @@ struct PonchiMenuView: View {
     
     var body: some View {
         ZStack {
+            Color.biege
+                .ignoresSafeArea()
+
             VStack {
                 PonchiHeaderMenu()
                     .padding(.horizontal, 10)

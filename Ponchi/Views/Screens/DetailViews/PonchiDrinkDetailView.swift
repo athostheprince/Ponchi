@@ -125,9 +125,7 @@ struct PonchiDrinkDetailView: View {
                                         NutritionView(nutrition: nutrition, calories: ponchi.calories)
                                     }
                                 }
-                                Text(
-                                    ponchi.selectedTeaType?.rawValue.uppercased() ?? ponchi.name.uppercased()
-                                )
+                                Text(ponchi.displayName.uppercased())
                                     .font(.lepca(35))
                                     .foregroundStyle(Color.brightGreen)
                                     .multilineTextAlignment(.center)

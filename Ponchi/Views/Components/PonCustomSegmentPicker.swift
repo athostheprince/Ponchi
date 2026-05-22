@@ -61,9 +61,6 @@ struct PonCustomSegmentPicker: View {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5)) {
                                 selectedCategory = category
                             }
-                            DispatchQueue.main.async {
-                                proxy.scrollTo(category, anchor: .top)
-                            }
                         }
                         .id(category)
                     }
@@ -73,7 +70,9 @@ struct PonCustomSegmentPicker: View {
             .onAppear {
                 if let selectedCategory {
                     DispatchQueue.main.async {
-                        proxy.scrollTo(selectedCategory, anchor: .center)
+                        withAnimation {
+                            proxy.scrollTo(selectedCategory, anchor: .center)
+                        }
                     }
                 }
             }

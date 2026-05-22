@@ -12,7 +12,8 @@ struct Ponchi: Identifiable, Codable, Equatable {
     var productId: String
     var id: String {
         let toppings = selectedToppings.map(\.name).joined(separator: ",")
-        return "\(productId)-\(size?.rawValue ?? "")-\(toppings)"
+        let tea = selectedTeaType?.rawValue ?? teaType?.first?.rawValue ?? ""
+        return "\(productId)-\(size?.rawValue ?? "")-\(tea)-\(toppings)"
     }
 
     // MARK: - Core
@@ -47,8 +48,12 @@ struct Ponchi: Identifiable, Codable, Equatable {
 // MARK: - Presentation
 
 extension Ponchi {
+    var displayName: String {
+        selectedTeaType?.rawValue ?? teaType?.first?.rawValue ?? name
+    }
+
     var displayImage: String {
-        selectedTeaType?.imageName ?? image
+        selectedTeaType?.imageName ?? teaType?.first?.imageName ?? image
     }
 
     var ml: String {
@@ -112,6 +117,7 @@ extension Ponchi {
     static func == (lhs: Ponchi, rhs: Ponchi) -> Bool {
         lhs.name == rhs.name &&
         lhs.size == rhs.size &&
+        lhs.selectedTeaType == rhs.selectedTeaType &&
         lhs.selectedToppings == rhs.selectedToppings
     }
 }

@@ -27,12 +27,13 @@ struct ListCellView: View {
     var decreaseAction: () -> Void
     
     var body: some View {
-        HStack {
+        HStack(spacing: 14) {
             Image(image)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
-                .cornerRadius(20)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 114, height: 114)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             
             VStack(alignment: .leading) {
                 
@@ -72,13 +73,12 @@ struct ListCellView: View {
                 }
             }
             .padding(.vertical, 7)
-            .padding(.horizontal, 5)
+            .padding(.trailing, 12)
             
             Spacer()
         }
-        .padding(.horizontal, 7)
         .background(Color.peony)
-        .cornerRadius(20)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 7)
     }
 }
