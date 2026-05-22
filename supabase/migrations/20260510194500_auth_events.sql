@@ -28,7 +28,8 @@ ON public.auth_events(event_type, created_at DESC);
 
 ALTER TABLE public.auth_events ENABLE ROW LEVEL SECURITY;
 
-CREATE OR REPLACE VIEW public.auth_activity AS
+CREATE OR REPLACE VIEW public.auth_activity
+WITH (security_invoker = true) AS
 SELECT
   e.created_at AS event_time,
   e.event_type,
